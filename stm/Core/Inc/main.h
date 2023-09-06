@@ -70,16 +70,16 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define SPI1_RST_Pin LL_GPIO_PIN_4
-#define SPI1_RST_GPIO_Port GPIOA
-#define SPI1_CE_Pin LL_GPIO_PIN_6
-#define SPI1_CE_GPIO_Port GPIOA
+#define SCREEN2_RST_Pin LL_GPIO_PIN_3
+#define SCREEN2_RST_GPIO_Port GPIOA
+#define SCREEN1_RST_Pin LL_GPIO_PIN_4
+#define SCREEN1_RST_GPIO_Port GPIOA
+#define SCREEN1_CE_Pin LL_GPIO_PIN_6
+#define SCREEN1_CE_GPIO_Port GPIOA
 #define SPI1_DC_Pin LL_GPIO_PIN_0
 #define SPI1_DC_GPIO_Port GPIOB
-#define SPI2_DC_Pin LL_GPIO_PIN_13
-#define SPI2_DC_GPIO_Port GPIOB
-#define SPI2_CE_Pin LL_GPIO_PIN_14
-#define SPI2_CE_GPIO_Port GPIOB
+#define SCREEN2_CE_Pin LL_GPIO_PIN_1
+#define SCREEN2_CE_GPIO_Port GPIOB
 #ifndef NVIC_PRIORITYGROUP_0
 #define NVIC_PRIORITYGROUP_0         ((uint32_t)0x00000007) /*!< 0 bit  for pre-emption priority,
                                                                  4 bits for subpriority */

@@ -11,7 +11,7 @@ FLASHER = scripts/programmer.py
 ASSETS_COMPILLER = scripts/icon_convert.py
 
 # Vars
-TARGET = DrunkPanel
+TARGET = DrunkDashboard
 BUILD_DIR = build
 SRCDIR = src
 CPU = -mcpu=cortex-m4
