@@ -68,10 +68,7 @@ LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BU
 C_SOURCES = \
 	stm/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_gpio.c \
 	stm/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_spi.c \
-	stm/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_dma.c \
-	stm/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_rcc.c \
-	stm/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_utils.c \
-	stm/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_exti.c
+	stm/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_utils.c
 C_SOURCES += $(wildcard src/*.c)
 C_SOURCES += $(wildcard stm/Core/Src/*.c)
 C_SOURCES += $(wildcard lib/u8g2/*.c)
