@@ -14,15 +14,15 @@ ASSETS_COMPILLER = scripts/icon_convert.py
 TARGET = DrunkDashboard
 BUILD_DIR = build
 SRCDIR = src
-CPU = -mcpu=cortex-m4
-FPU = -mfpu=fpv4-sp-d16
+CPU = -mcpu=cortex-m7
+FPU = -mfpu=fpv5-d16
 FLOAT-ABI = -mfloat-abi=hard
 MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 DEBUG = 1
 OPT = -Og
-LDSCRIPT = stm/STM32F411CEUx_FLASH.ld
+LDSCRIPT = stm/STM32H743VITx_FLASH.ld
 MAKEFLAGS+="-j -l $(shell sysctl hw.ncpu | awk '{print $2}') "
-WARN = -Wall -Werror
+WARN =
 
 AS_DEFS =
 
@@ -33,13 +33,10 @@ C_DEFS = \
 	-DLSE_STARTUP_TIMEOUT=5000 \
 	-DLSE_VALUE=32768 \
 	-DEXTERNAL_CLOCK_VALUE=12288000 \
-	-DHSI_VALUE=16000000 \
+	-DHSI_VALUE=64000000 \
 	-DLSI_VALUE=32000 \
 	-DVDD_VALUE=3300 \
-	-DPREFETCH_ENABLE=1 \
-	-DINSTRUCTION_CACHE_ENABLE=1 \
-	-DDATA_CACHE_ENABLE=1 \
-	-DSTM32F411xE
+	-DSTM32H743xx
 
 AS_INCLUDES =
 
@@ -47,8 +44,8 @@ C_INCLUDES = \
 	-Isrc \
 	-Ilib \
 	-Istm/Core/Inc \
-	-Istm/Drivers/STM32F4xx_HAL_Driver/Inc \
-	-Istm/Drivers/CMSIS/Device/ST/STM32F4xx/Include \
+	-Istm/Drivers/STM32H7xx_HAL_Driver/Inc \
+	-Istm/Drivers/CMSIS/Device/ST/STM32H7xx/Include \
 	-Istm/Drivers/CMSIS/Include
 
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) $(WARN) -fdata-sections -ffunction-sections
@@ -66,14 +63,18 @@ LIBDIR =
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 C_SOURCES = \
-	stm/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_gpio.c \
-	stm/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_spi.c \
-	stm/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_utils.c
+	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_gpio.c \
+	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_utils.c \
+	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usart.c \
+	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_rcc.c \
+	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_tim.c \
+	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_spi.c
 C_SOURCES += $(wildcard src/*.c)
+C_SOURCES += $(wildcard src/halk/*.c)
 C_SOURCES += $(wildcard stm/Core/Src/*.c)
 C_SOURCES += $(wildcard lib/u8g2/*.c)
 
-ASM_SOURCES = stm/startup_stm32f411xe.s
+ASM_SOURCES = stm/startup_stm32h743xx.s
 
 OBJECTS += $(addprefix $(BUILD_DIR)/, $(C_SOURCES:.c=.o))
 OBJECTS += $(addprefix $(BUILD_DIR)/, $(ASM_SOURCES:.s=.o))

@@ -1,3 +1,3 @@
 #pragma once
 
-void drunk_panel();
+void drunk_dashboard();

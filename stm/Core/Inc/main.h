@@ -27,16 +27,19 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_ll_rcc.h"
-#include "stm32f4xx_ll_bus.h"
-#include "stm32f4xx_ll_system.h"
-#include "stm32f4xx_ll_exti.h"
-#include "stm32f4xx_ll_cortex.h"
-#include "stm32f4xx_ll_utils.h"
-#include "stm32f4xx_ll_pwr.h"
-#include "stm32f4xx_ll_dma.h"
-#include "stm32f4xx_ll_spi.h"
-#include "stm32f4xx_ll_gpio.h"
+#include "stm32h7xx_ll_rcc.h"
+#include "stm32h7xx_ll_crs.h"
+#include "stm32h7xx_ll_bus.h"
+#include "stm32h7xx_ll_system.h"
+#include "stm32h7xx_ll_exti.h"
+#include "stm32h7xx_ll_cortex.h"
+#include "stm32h7xx_ll_utils.h"
+#include "stm32h7xx_ll_pwr.h"
+#include "stm32h7xx_ll_dma.h"
+#include "stm32h7xx_ll_spi.h"
+#include "stm32h7xx_ll_tim.h"
+#include "stm32h7xx_ll_usart.h"
+#include "stm32h7xx_ll_gpio.h"
 
 #if defined(USE_FULL_ASSERT)
 #include "stm32_assert.h"
@@ -70,16 +73,50 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define SCREEN2_RST_Pin LL_GPIO_PIN_3
-#define SCREEN2_RST_GPIO_Port GPIOA
-#define SCREEN1_RST_Pin LL_GPIO_PIN_4
-#define SCREEN1_RST_GPIO_Port GPIOA
-#define SCREEN1_CE_Pin LL_GPIO_PIN_6
-#define SCREEN1_CE_GPIO_Port GPIOA
-#define SPI1_DC_Pin LL_GPIO_PIN_0
-#define SPI1_DC_GPIO_Port GPIOB
-#define SCREEN2_CE_Pin LL_GPIO_PIN_1
-#define SCREEN2_CE_GPIO_Port GPIOB
+#define SPI1_DC_Pin LL_GPIO_PIN_6
+#define SPI1_DC_GPIO_Port GPIOA
+#define DISP4_CS_Pin LL_GPIO_PIN_2
+#define DISP4_CS_GPIO_Port GPIOB
+#define DISP4_RES_Pin LL_GPIO_PIN_7
+#define DISP4_RES_GPIO_Port GPIOE
+#define DISP7_CS_Pin LL_GPIO_PIN_8
+#define DISP7_CS_GPIO_Port GPIOE
+#define DISP7_RES_Pin LL_GPIO_PIN_10
+#define DISP7_RES_GPIO_Port GPIOE
+#define DISP1_RES_Pin LL_GPIO_PIN_12
+#define DISP1_RES_GPIO_Port GPIOE
+#define DISP1_CS_Pin LL_GPIO_PIN_13
+#define DISP1_CS_GPIO_Port GPIOE
+#define BACK_BTN_Pin LL_GPIO_PIN_12
+#define BACK_BTN_GPIO_Port GPIOA
+#define NOT_PROVIDED_Pin LL_GPIO_PIN_15
+#define NOT_PROVIDED_GPIO_Port GPIOA
+#define DISP9_RES_Pin LL_GPIO_PIN_10
+#define DISP9_RES_GPIO_Port GPIOC
+#define ENC_BTN_Pin LL_GPIO_PIN_11
+#define ENC_BTN_GPIO_Port GPIOC
+#define DISP6_RES_Pin LL_GPIO_PIN_12
+#define DISP6_RES_GPIO_Port GPIOC
+#define DISP9_CS_Pin LL_GPIO_PIN_1
+#define DISP9_CS_GPIO_Port GPIOD
+#define DISP6_CS_Pin LL_GPIO_PIN_4
+#define DISP6_CS_GPIO_Port GPIOD
+#define DISP2_CS_Pin LL_GPIO_PIN_7
+#define DISP2_CS_GPIO_Port GPIOD
+#define DISP2_RES_Pin LL_GPIO_PIN_4
+#define DISP2_RES_GPIO_Port GPIOB
+#define DISP3_RES_Pin LL_GPIO_PIN_5
+#define DISP3_RES_GPIO_Port GPIOB
+#define DISP5_CS_Pin LL_GPIO_PIN_6
+#define DISP5_CS_GPIO_Port GPIOB
+#define DISP3_CS_Pin LL_GPIO_PIN_7
+#define DISP3_CS_GPIO_Port GPIOB
+#define DISP8_CS_Pin LL_GPIO_PIN_8
+#define DISP8_CS_GPIO_Port GPIOB
+#define DISP5_RES_Pin LL_GPIO_PIN_9
+#define DISP5_RES_GPIO_Port GPIOB
+#define DISP8_RES_Pin LL_GPIO_PIN_1
+#define DISP8_RES_GPIO_Port GPIOE
 #ifndef NVIC_PRIORITYGROUP_0
 #define NVIC_PRIORITYGROUP_0         ((uint32_t)0x00000007) /*!< 0 bit  for pre-emption priority,
                                                                  4 bits for subpriority */
