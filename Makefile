@@ -111,13 +111,13 @@ $(BUILD_DIR):
 .PHONY: lint
 lint:
 	find . -type f \( -name "*.c" -o -name "*.h" \) \
-		\( -path "./src/*" -o -path "./src/*" \) \
+		\( -path "./lib/*" -o -path "./src/*" \) \
         | xargs clang-format --Werror --style=file -i --dry-run
 
 .PHONY: format
 format:
 	find . -type f \( -name "*.c" -o -name "*.h" \) \
-		\( -path "./src/*" -o -path "./src/*" \) \
+		\( -path "./lib/*" -o -path "./src/*" \) \
         | xargs clang-format --Werror --style=file -i
 
 .PHONY: flash

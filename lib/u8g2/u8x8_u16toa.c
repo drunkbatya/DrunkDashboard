@@ -34,44 +34,36 @@
   
 */
 
-
 #include "u8x8.h"
 
-const char *u8x8_u16toap(char * dest, uint16_t v)
-{
-  uint8_t pos;
-  uint8_t d;
-  uint16_t c;
-  c = 10000;
-  for( pos = 0; pos < 5; pos++ )
-  {
-      d = '0';
-      while( v >= c )
-      {
-	v -= c;
-	d++;
-      }
-      dest[pos] = d;
-      c /= 10;
-  }  
-  dest[5] = '\0';
-  return dest;
+const char* u8x8_u16toap(char* dest, uint16_t v) {
+    uint8_t pos;
+    uint8_t d;
+    uint16_t c;
+    c = 10000;
+    for(pos = 0; pos < 5; pos++) {
+        d = '0';
+        while(v >= c) {
+            v -= c;
+            d++;
+        }
+        dest[pos] = d;
+        c /= 10;
+    }
+    dest[5] = '\0';
+    return dest;
 }
 
 /* v = value, d = number of digits */
-const char *u8x8_u16toa(uint16_t v, uint8_t d)
-{
-  static char buf[6];
-  d = 5-d;
-  return u8x8_u16toap(buf, v) + d;
+const char* u8x8_u16toa(uint16_t v, uint8_t d) {
+    static char buf[6];
+    d = 5 - d;
+    return u8x8_u16toap(buf, v) + d;
 }
 
-const char *u8x8_utoa(uint16_t v)
-{
-  const char *s = u8x8_u16toa(v, 5);
-  while( *s == '0' )
-    s++;
-  if ( *s == '\0' )
-    s--;
-  return s;
+const char* u8x8_utoa(uint16_t v) {
+    const char* s = u8x8_u16toa(v, 5);
+    while(*s == '0') s++;
+    if(*s == '\0') s--;
+    return s;
 }
