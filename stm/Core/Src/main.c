@@ -205,63 +205,52 @@ void PeriphCommonClock_Config(void)
   */
 static void MX_SPI1_Init(void)
 {
-	// PORTA clock enable
-	RCC->AHB4ENR |= RCC_AHB4ENR_GPIOAEN;
-	
-	//SPI1 clock enable 
-	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
-	
-	
-	/*
-			PA5 = SCK
-			PA7 = MOSI
-	
-	*/
-	
-	
-	// GPIOA pin 7, 5 = alternate function mode
-	GPIOA->MODER &= ~((GPIO_MODER_MODE7_0) | (GPIO_MODER_MODE5_0));
-	GPIOA->MODER |= ((GPIO_MODER_MODE7_1) | (GPIO_MODER_MODE5_1));
-	
-	// alternate mux
-	// PA7 = AF5 (MOSI)
-	// PA5 = AF5 (SCK)
-	GPIOA->AFR[0] |= 5<<28 | 5<<20;
-    	SPI1->CR1 &= ~SPI_CR1_TCRCINI;
-	// polynomial not used
-	SPI1->CR1 &= ~SPI_CR1_CRC33_17;
 
+  /* USER CODE BEGIN SPI1_Init 0 */
 
-	// CFG1
-	// master clock /32
-	SPI1->CFG1 |= SPI_CFG1_MBR_2;
-	// CRC computation disable
-	SPI1->CFG1 &= ~SPI_CFG1_CRCEN;
-	// CRCSIZE = 0
-	SPI1->CFG1 &= ~SPI_CFG1_CRCSIZE;
-	// tx dma disable
-	SPI1->CFG1 &= ~I2C_CR1_TXDMAEN;
-	// rx dma disable
-	SPI1->CFG1 &= ~SPI_CFG1_RXDMAEN;
-	// fifo threshold level = 1-data
-	SPI1->CFG1 &= ~SPI_CFG1_FTHLV;
-	// Dsize = 8bits
-	SPI1->CFG1 &= ~SPI_CFG1_DSIZE;
-	SPI1->CFG1 |= SPI_CFG1_DSIZE_0 | SPI_CFG1_DSIZE_1 | SPI_CFG1_DSIZE_2;
+  /* USER CODE END SPI1_Init 0 */
 
+  LL_SPI_InitTypeDef SPI_InitStruct = {0};
 
-	// CFG2
-	// SS SW-management of SS, internal state by SSI bit
-	SPI1->CFG2 |= SPI_CFG2_SSM;
-	// CR1
-	// SS bit high
-	SPI1->CR1 |= SPI_CR1_SSI;
+  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 
+  LL_RCC_SetSPIClockSource(LL_RCC_SPI123_CLKSOURCE_PLL2P);
 
+  /* Peripheral clock enable */
+  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SPI1);
 
-	// SPI master mode
-	SPI1->CFG2 |= SPI_CFG2_MASTER;
-    SPI1->CFG2 |= SPI_CFG2_COMM_0;
+  LL_AHB4_GRP1_EnableClock(LL_AHB4_GRP1_PERIPH_GPIOA);
+  /**SPI1 GPIO Configuration
+  PA5   ------> SPI1_SCK
+  PA7   ------> SPI1_MOSI
+  */
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_5|LL_GPIO_PIN_7;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  GPIO_InitStruct.Alternate = LL_GPIO_AF_5;
+  LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /* USER CODE BEGIN SPI1_Init 1 */
+  /* USER CODE END SPI1_Init 1 */
+  /* SPI1 parameter configuration*/
+  SPI_InitStruct.TransferDirection = LL_SPI_SIMPLEX_TX;
+  SPI_InitStruct.Mode = LL_SPI_MODE_MASTER;
+  SPI_InitStruct.DataWidth = LL_SPI_DATAWIDTH_8BIT;
+  SPI_InitStruct.ClockPolarity = LL_SPI_POLARITY_LOW;
+  SPI_InitStruct.ClockPhase = LL_SPI_PHASE_1EDGE;
+  SPI_InitStruct.NSS = LL_SPI_NSS_SOFT;
+  SPI_InitStruct.BaudRate = LL_SPI_BAUDRATEPRESCALER_DIV16;
+  SPI_InitStruct.BitOrder = LL_SPI_MSB_FIRST;
+  SPI_InitStruct.CRCCalculation = LL_SPI_CRCCALCULATION_DISABLE;
+  SPI_InitStruct.CRCPoly = 0x0;
+  LL_SPI_Init(SPI1, &SPI_InitStruct);
+  LL_SPI_SetStandard(SPI1, LL_SPI_PROTOCOL_MOTOROLA);
+  LL_SPI_EnableNSSPulseMgt(SPI1);
+  /* USER CODE BEGIN SPI1_Init 2 */
+  /* USER CODE END SPI1_Init 2 */
+
 }
 
 /**

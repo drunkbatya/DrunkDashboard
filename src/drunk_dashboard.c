@@ -64,6 +64,7 @@ static uint8_t u8g2_4wire_hw_spi_stm32(u8x8_t* u8x8, uint8_t msg, uint8_t arg_in
 }
 
 void drunk_dashboard() {
+    halk_spi_init(SPI1);
     u8g2_t* display0 = malloc(sizeof(u8g2_t));
     //u8g2_t* display1 = malloc(sizeof(u8g2_t));
 
