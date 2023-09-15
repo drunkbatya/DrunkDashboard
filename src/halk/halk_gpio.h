@@ -7,4 +7,4 @@ typedef struct {
     uint32_t pin;
 } GPIOPin;
 
-void halk_gpio_pin_write(GPIOPin* pin, uint8_t state);
+void halk_gpio_pin_write(const GPIOPin* pin, uint8_t state);

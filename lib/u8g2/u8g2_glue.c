@@ -1,6 +1,7 @@
 #include "u8g2_glue.h"
-#include <stm32h7xx_ll_utils.h>
+#include <hardware.h>
 #include <halk/halk.h>
+#include <halk/halk_delay.h>
 #include <halk/halk_spi.h>
 #include <halk/halk_gpio.h>
 
@@ -8,29 +9,274 @@ uint8_t
     u8g2_gpio_and_delay_stm32_display0(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr) {
     UNUSED(u8x8);
     UNUSED(arg_ptr);
-    GPIOPin display_rst_pin = {GPIOE, LL_GPIO_PIN_12};
-    GPIOPin display_dc_pin = {GPIOA, LL_GPIO_PIN_6};
-    GPIOPin display_cs_pin = {GPIOE, LL_GPIO_PIN_13};
     switch(msg) {
     case U8X8_MSG_GPIO_AND_DELAY_INIT:
         break;
     case U8X8_MSG_DELAY_MILLI:
-        LL_mDelay(arg_int);
+        halk_delay_ms(arg_int);
         break;
     case U8X8_MSG_DELAY_10MICRO:
-        LL_mDelay(1);
+        halk_delay_ms(1);
         break;
     case U8X8_MSG_DELAY_100NANO:
         asm("nop");
         break;
     case U8X8_MSG_GPIO_RESET:
-        halk_gpio_pin_write(&display_rst_pin, arg_int);
+        halk_gpio_pin_write(&display0_rst_pin, arg_int);
         break;
     case U8X8_MSG_GPIO_DC:
-        halk_gpio_pin_write(&display_dc_pin, arg_int);
+        halk_gpio_pin_write(&displays_dc_pin, arg_int);
         break;
     case U8X8_MSG_GPIO_CS:
-        halk_gpio_pin_write(&display_cs_pin, arg_int);
+        halk_gpio_pin_write(&display0_cs_pin, arg_int);
+        break;
+    default:
+        return false;
+    }
+    return true;
+}
+
+uint8_t
+    u8g2_gpio_and_delay_stm32_display1(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr) {
+    UNUSED(u8x8);
+    UNUSED(arg_ptr);
+    switch(msg) {
+    case U8X8_MSG_GPIO_AND_DELAY_INIT:
+        break;
+    case U8X8_MSG_DELAY_MILLI:
+        halk_delay_ms(arg_int);
+        break;
+    case U8X8_MSG_DELAY_10MICRO:
+        halk_delay_ms(1);
+        break;
+    case U8X8_MSG_DELAY_100NANO:
+        asm("nop");
+        break;
+    case U8X8_MSG_GPIO_RESET:
+        halk_gpio_pin_write(&display1_rst_pin, arg_int);
+        break;
+    case U8X8_MSG_GPIO_DC:
+        halk_gpio_pin_write(&displays_dc_pin, arg_int);
+        break;
+    case U8X8_MSG_GPIO_CS:
+        halk_gpio_pin_write(&display1_cs_pin, arg_int);
+        break;
+    default:
+        return false;
+    }
+    return true;
+}
+
+uint8_t
+    u8g2_gpio_and_delay_stm32_display2(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr) {
+    UNUSED(u8x8);
+    UNUSED(arg_ptr);
+    switch(msg) {
+    case U8X8_MSG_GPIO_AND_DELAY_INIT:
+        break;
+    case U8X8_MSG_DELAY_MILLI:
+        halk_delay_ms(arg_int);
+        break;
+    case U8X8_MSG_DELAY_10MICRO:
+        halk_delay_ms(1);
+        break;
+    case U8X8_MSG_DELAY_100NANO:
+        asm("nop");
+        break;
+    case U8X8_MSG_GPIO_RESET:
+        halk_gpio_pin_write(&display2_rst_pin, arg_int);
+        break;
+    case U8X8_MSG_GPIO_DC:
+        halk_gpio_pin_write(&displays_dc_pin, arg_int);
+        break;
+    case U8X8_MSG_GPIO_CS:
+        halk_gpio_pin_write(&display2_cs_pin, arg_int);
+        break;
+    default:
+        return false;
+    }
+    return true;
+}
+
+uint8_t
+    u8g2_gpio_and_delay_stm32_display3(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr) {
+    UNUSED(u8x8);
+    UNUSED(arg_ptr);
+    switch(msg) {
+    case U8X8_MSG_GPIO_AND_DELAY_INIT:
+        break;
+    case U8X8_MSG_DELAY_MILLI:
+        halk_delay_ms(arg_int);
+        break;
+    case U8X8_MSG_DELAY_10MICRO:
+        halk_delay_ms(1);
+        break;
+    case U8X8_MSG_DELAY_100NANO:
+        asm("nop");
+        break;
+    case U8X8_MSG_GPIO_RESET:
+        halk_gpio_pin_write(&display3_rst_pin, arg_int);
+        break;
+    case U8X8_MSG_GPIO_DC:
+        halk_gpio_pin_write(&displays_dc_pin, arg_int);
+        break;
+    case U8X8_MSG_GPIO_CS:
+        halk_gpio_pin_write(&display3_cs_pin, arg_int);
+        break;
+    default:
+        return false;
+    }
+    return true;
+}
+
+uint8_t
+    u8g2_gpio_and_delay_stm32_display4(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr) {
+    UNUSED(u8x8);
+    UNUSED(arg_ptr);
+    switch(msg) {
+    case U8X8_MSG_GPIO_AND_DELAY_INIT:
+        break;
+    case U8X8_MSG_DELAY_MILLI:
+        halk_delay_ms(arg_int);
+        break;
+    case U8X8_MSG_DELAY_10MICRO:
+        halk_delay_ms(1);
+        break;
+    case U8X8_MSG_DELAY_100NANO:
+        asm("nop");
+        break;
+    case U8X8_MSG_GPIO_RESET:
+        halk_gpio_pin_write(&display4_rst_pin, arg_int);
+        break;
+    case U8X8_MSG_GPIO_DC:
+        halk_gpio_pin_write(&displays_dc_pin, arg_int);
+        break;
+    case U8X8_MSG_GPIO_CS:
+        halk_gpio_pin_write(&display4_cs_pin, arg_int);
+        break;
+    default:
+        return false;
+    }
+    return true;
+}
+
+uint8_t
+    u8g2_gpio_and_delay_stm32_display5(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr) {
+    UNUSED(u8x8);
+    UNUSED(arg_ptr);
+    switch(msg) {
+    case U8X8_MSG_GPIO_AND_DELAY_INIT:
+        break;
+    case U8X8_MSG_DELAY_MILLI:
+        halk_delay_ms(arg_int);
+        break;
+    case U8X8_MSG_DELAY_10MICRO:
+        halk_delay_ms(1);
+        break;
+    case U8X8_MSG_DELAY_100NANO:
+        asm("nop");
+        break;
+    case U8X8_MSG_GPIO_RESET:
+        halk_gpio_pin_write(&display5_rst_pin, arg_int);
+        break;
+    case U8X8_MSG_GPIO_DC:
+        halk_gpio_pin_write(&displays_dc_pin, arg_int);
+        break;
+    case U8X8_MSG_GPIO_CS:
+        halk_gpio_pin_write(&display5_cs_pin, arg_int);
+        break;
+    default:
+        return false;
+    }
+    return true;
+}
+
+uint8_t
+    u8g2_gpio_and_delay_stm32_display6(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr) {
+    UNUSED(u8x8);
+    UNUSED(arg_ptr);
+    switch(msg) {
+    case U8X8_MSG_GPIO_AND_DELAY_INIT:
+        break;
+    case U8X8_MSG_DELAY_MILLI:
+        halk_delay_ms(arg_int);
+        break;
+    case U8X8_MSG_DELAY_10MICRO:
+        halk_delay_ms(1);
+        break;
+    case U8X8_MSG_DELAY_100NANO:
+        asm("nop");
+        break;
+    case U8X8_MSG_GPIO_RESET:
+        halk_gpio_pin_write(&display6_rst_pin, arg_int);
+        break;
+    case U8X8_MSG_GPIO_DC:
+        halk_gpio_pin_write(&displays_dc_pin, arg_int);
+        break;
+    case U8X8_MSG_GPIO_CS:
+        halk_gpio_pin_write(&display6_cs_pin, arg_int);
+        break;
+    default:
+        return false;
+    }
+    return true;
+}
+
+uint8_t
+    u8g2_gpio_and_delay_stm32_display7(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr) {
+    UNUSED(u8x8);
+    UNUSED(arg_ptr);
+    switch(msg) {
+    case U8X8_MSG_GPIO_AND_DELAY_INIT:
+        break;
+    case U8X8_MSG_DELAY_MILLI:
+        halk_delay_ms(arg_int);
+        break;
+    case U8X8_MSG_DELAY_10MICRO:
+        halk_delay_ms(1);
+        break;
+    case U8X8_MSG_DELAY_100NANO:
+        asm("nop");
+        break;
+    case U8X8_MSG_GPIO_RESET:
+        halk_gpio_pin_write(&display7_rst_pin, arg_int);
+        break;
+    case U8X8_MSG_GPIO_DC:
+        halk_gpio_pin_write(&displays_dc_pin, arg_int);
+        break;
+    case U8X8_MSG_GPIO_CS:
+        halk_gpio_pin_write(&display7_cs_pin, arg_int);
+        break;
+    default:
+        return false;
+    }
+    return true;
+}
+
+uint8_t
+    u8g2_gpio_and_delay_stm32_display8(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr) {
+    UNUSED(u8x8);
+    UNUSED(arg_ptr);
+    switch(msg) {
+    case U8X8_MSG_GPIO_AND_DELAY_INIT:
+        break;
+    case U8X8_MSG_DELAY_MILLI:
+        halk_delay_ms(arg_int);
+        break;
+    case U8X8_MSG_DELAY_10MICRO:
+        halk_delay_ms(1);
+        break;
+    case U8X8_MSG_DELAY_100NANO:
+        asm("nop");
+        break;
+    case U8X8_MSG_GPIO_RESET:
+        halk_gpio_pin_write(&display8_rst_pin, arg_int);
+        break;
+    case U8X8_MSG_GPIO_DC:
+        halk_gpio_pin_write(&displays_dc_pin, arg_int);
+        break;
+    case U8X8_MSG_GPIO_CS:
+        halk_gpio_pin_write(&display8_cs_pin, arg_int);
         break;
     default:
         return false;

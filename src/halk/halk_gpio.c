@@ -1,6 +1,6 @@
 #include "halk_gpio.h"
 
-void halk_gpio_pin_write(GPIOPin* pin, uint8_t state) {
+void halk_gpio_pin_write(const GPIOPin* pin, uint8_t state) {
     if(state)
         LL_GPIO_SetOutputPin(pin->port, pin->pin);
     else
