@@ -19,7 +19,7 @@ uint8_t
         halk_delay_ms(1);
         break;
     case U8X8_MSG_DELAY_100NANO:
-        asm("nop");
+        halk_delay_ms(1);
         break;
     case U8X8_MSG_GPIO_RESET:
         halk_gpio_pin_write(&display0_rst_pin, arg_int);

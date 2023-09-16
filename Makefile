@@ -7,12 +7,14 @@ SZ = $(PREFIX)size
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
 PY = python3
-FLASHER = scripts/programmer.py
 ASSETS_COMPILLER = scripts/icon_convert.py
 
 # Vars
 TARGET = DrunkDashboard
 BUILD_DIR = build
+ASSETS_DIR = assets
+ASSETS_SOURCE_DIR = $(ASSETS_DIR)/src
+ASSETS_BUILD_DIR = $(ASSETS_DIR)/build
 SRCDIR = src
 CPU = -mcpu=cortex-m7
 FPU = -mfpu=fpv5-d16
@@ -22,7 +24,7 @@ DEBUG = 1
 OPT = -Og
 LDSCRIPT = stm/STM32H743VITx_FLASH.ld
 MAKEFLAGS+="-j -l $(shell sysctl hw.ncpu | awk '{print $2}') "
-WARN =
+WARN = -Wall
 
 AS_DEFS =
 
@@ -43,6 +45,7 @@ AS_INCLUDES =
 C_INCLUDES = \
 	-Isrc \
 	-Ilib \
+	-Iassets/build \
 	-Istm/Core/Inc \
 	-Istm/Drivers/STM32H7xx_HAL_Driver/Inc \
 	-Istm/Drivers/CMSIS/Device/ST/STM32H7xx/Include \
@@ -62,7 +65,13 @@ LIBS = -lc -lm -lnosys
 LIBDIR =
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
-C_SOURCES = \
+ASSETS_SOURCES = $(shell find $(ASSETS_SOURCE_DIR) -type f -name '*.png')
+
+ifneq ($(ASSETS_SOURCES),)
+C_SOURCES = $(ASSETS_BUILD_DIR)/assets_icons.c
+endif
+
+C_SOURCES += \
 	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_gpio.c \
 	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_utils.c \
 	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usart.c \
@@ -92,7 +101,7 @@ $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
 	@echo "\tASM\t" $<
 	@$(AS) -c $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
+$(BUILD_DIR)/$(TARGET).elf: build/assets/build/assets_icons.o $(OBJECTS) Makefile
 	@echo "\tLD\t" $@
 	@$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 	@$(SZ) $@
@@ -105,7 +114,15 @@ $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 	@echo "\tBIN\t" $@
 	@$(BIN) $< $@
 
+$(ASSETS_BUILD_DIR)/assets_icons.c: $(ASSETS_SOURCES) $(ASSETS_COMPILLER)
+	@echo "\tASSETS\t" $@
+	@mkdir -p $(ASSETS_BUILD_DIR)
+	@$(ASSETS_COMPILLER) $(ASSETS_SOURCE_DIR) $(ASSETS_BUILD_DIR)
+
 $(BUILD_DIR):
+	mkdir $@
+
+$(ASSETS_BUILD_DIR):
 	mkdir $@
 
 .PHONY: lint
@@ -121,12 +138,12 @@ format:
         | xargs clang-format --Werror --style=file -i
 
 .PHONY: flash
-flash: $(BUILD_DIR)/$(TARGET).bin scripts/programmer.py
+flash: $(BUILD_DIR)/$(TARGET).bin
 	@echo "\tFLASH\t" $(BUILD_DIR)/$(TARGET).bin
 	@st-flash write $(BUILD_DIR)/$(TARGET).bin 0x8000000
 
 .PHONY: flash-dfu
-flash-dfu: $(BUILD_DIR)/$(TARGET).bin scripts/programmer.py
+flash-dfu: $(BUILD_DIR)/$(TARGET).bin
 	dfu-util -a 0 -D $(BUILD_DIR)/$(TARGET).bin -s 0x08000000
 
 .PHONY: clean
