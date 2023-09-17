@@ -36,7 +36,20 @@ static void draw_display3(Canvas* canvas, char* str, uint32_t counter) {
     canvas_draw_str(canvas, 20, 40, str);
 }
 
-void drunk_dashboard() {
+DrunkDashboard* drunk_dashboard_alloc() {
+    DrunkDashboard* drunk_dashboard = malloc(sizeof(DrunkDashboard));
+    drunk_dashboard->scene_manager =
+        scene_manager_alloc(&drunk_dashboard_scene_handlers, drunk_dashboard);
+    return drunk_dashboard;
+}
+
+void drunk_dashboard_free(DrunkDashboard* drunk_dashboard) {
+    scene_manager_free(drunk_dashboard->scene_manager);
+    free(drunk_dashboard);
+}
+
+void drunk_dashboard_run(DrunkDashboard* drunk_dashboard) {
+    UNUSED(drunk_dashboard);
     Canvas* canvas0 = canvas_init(u8g2_4wire_hw_spi_stm32, u8g2_gpio_and_delay_stm32_display0);
     Canvas* canvas1 = canvas_init(u8g2_4wire_hw_spi_stm32, u8g2_gpio_and_delay_stm32_display1);
     Canvas* canvas2 = canvas_init(u8g2_4wire_hw_spi_stm32, u8g2_gpio_and_delay_stm32_display2);

@@ -24,7 +24,7 @@ DEBUG = 1
 OPT = -Og
 LDSCRIPT = stm/STM32H743VITx_FLASH.ld
 MAKEFLAGS+="-j -l $(shell sysctl hw.ncpu | awk '{print $2}') "
-WARN = -Wall
+WARN = -Wall -Werror -Wextra
 
 AS_DEFS =
 
@@ -67,6 +67,8 @@ LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BU
 
 ASSETS_SOURCES = $(shell find $(ASSETS_SOURCE_DIR) -type f -name '*.png')
 
+HEADERS = $(shell find $(SRCDIR) -type f -name '*.h')
+
 ifneq ($(ASSETS_SOURCES),)
 C_SOURCES = $(ASSETS_BUILD_DIR)/assets_icons.c
 endif
@@ -79,6 +81,8 @@ C_SOURCES += \
 	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_tim.c \
 	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_spi.c
 C_SOURCES += $(wildcard src/*.c)
+C_SOURCES += $(wildcard src/scenes/*.c)
+C_SOURCES += $(wildcard src/views/*.c)
 C_SOURCES += $(wildcard src/halk/*.c)
 C_SOURCES += $(wildcard stm/Core/Src/*.c)
 C_SOURCES += $(wildcard lib/u8g2/*.c)
@@ -101,7 +105,7 @@ $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
 	@echo "\tASM\t" $<
 	@$(AS) -c $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/$(TARGET).elf: build/assets/build/assets_icons.o $(OBJECTS) Makefile
+$(BUILD_DIR)/$(TARGET).elf: build/assets/build/assets_icons.o $(HEADERS) $(OBJECTS) Makefile
 	@echo "\tLD\t" $@
 	@$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 	@$(SZ) $@
@@ -128,13 +132,13 @@ $(ASSETS_BUILD_DIR):
 .PHONY: lint
 lint:
 	find . -type f \( -name "*.c" -o -name "*.h" \) \
-		\( -path "./lib/*" -o -path "./src/*" \) \
+		\( -path "./src/*" -o -path "./src/*" \) \
         | xargs clang-format --Werror --style=file -i --dry-run
 
 .PHONY: format
 format:
 	find . -type f \( -name "*.c" -o -name "*.h" \) \
-		\( -path "./lib/*" -o -path "./src/*" \) \
+		\( -path "./src/*" -o -path "./src/*" \) \
         | xargs clang-format --Werror --style=file -i
 
 .PHONY: flash
