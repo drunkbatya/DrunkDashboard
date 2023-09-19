@@ -37,6 +37,7 @@ Canvas* canvas_init(u8x8_msg_cb u8g2_comm_cb, u8x8_msg_cb u8g2_gpio_and_delay_cb
 void canvas_free(Canvas* canvas);
 void canvas_commit(Canvas* canvas);
 void canvas_clear(Canvas* canvas);
+void canvas_reset(Canvas* canvas);
 void canvas_draw_str(Canvas* canvas, uint8_t x, uint8_t y, const char* str);
 void canvas_draw_icon(Canvas* canvas, uint8_t x, uint8_t y, const Icon* icon);
 void canvas_draw_box(Canvas* canvas, uint8_t x, uint8_t y, uint8_t width, uint8_t height);

@@ -1,4 +1,4 @@
-#include "hardware.h"
+#include "halk_hardware.h"
 
 // displays
 // displays global

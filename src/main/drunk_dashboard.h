@@ -1,11 +1,15 @@
 #pragma once
 
 #include <gui/scene_manager_i.h>
+#include <gui/gui.h>
 #include <halk/halk.h>
 #include "scenes/drunk_dashboard_scene.h"
+#include "views/drunk_dashboard_view_pressure.h"
 
 typedef struct {
+    Gui* gui;
     SceneManager* scene_manager;
+    DrunkDashboardViewPressure* view_pressure;
 } DrunkDashboard;
 
 DrunkDashboard* drunk_dashboard_alloc();

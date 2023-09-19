@@ -36,6 +36,12 @@ void canvas_clear(Canvas* canvas) {
     u8g2_ClearBuffer(&canvas->fb);
 }
 
+void canvas_reset(Canvas* canvas) {
+    canvas_clear(canvas);
+    canvas_set_color(canvas, CanvasColorBlack);
+    canvas_set_font(canvas, CanvasFontSecondary);
+}
+
 void canvas_draw_str(Canvas* canvas, uint8_t x, uint8_t y, const char* str) {
     if(!str) return;
     u8g2_DrawStr(&canvas->fb, x, y, str);

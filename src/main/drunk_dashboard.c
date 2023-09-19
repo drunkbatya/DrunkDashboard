@@ -4,83 +4,54 @@
 #include <halk/halk_delay.h>
 #include <u8g2/u8g2_glue.h>
 
-#include <stdio.h>
 #include <stdlib.h>
-
-static void draw_display0(Canvas* canvas) {
-    canvas_draw_str(canvas, 20, 20, "Hi from display0!");
-    canvas_draw_box(canvas, 3, 3, 10, 10);
-    // canvas_draw_frame(canvas, 0, 0, canvas_get_width(canvas0), canvas_get_height(canvas0));
-}
-
-static void draw_display1(Canvas* canvas) {
-    canvas_draw_str(canvas, 20, 40, "Hi from display1!");
-    canvas_draw_icon(canvas, 0, 0, &I_BatteryBody_52x28);
-}
-
-static void draw_display2(Canvas* canvas, char* str, uint32_t bar) {
-    sprintf(str, "%lu.%.2lu", bar / 100, bar % 100);
-    // canvas_draw_frame(canvas, 0, 0, canvas_get_width(canvas), canvas_get_height(canvas));
-    canvas_draw_icon(canvas, 4, 8, &I_Turbocharger_59_48);
-    canvas_set_font(canvas, CanvasFontPrimary);
-    canvas_draw_str(canvas, 75, 10, "Pressure");
-    canvas_set_font(canvas, CanvasFontBigNumbers);
-    canvas_draw_str(canvas, 57, 52, str);
-    canvas_set_font(canvas, CanvasFontSecondary);
-    canvas_draw_str(canvas, 105, 51, "bar");
-}
-
-static void draw_display3(Canvas* canvas, char* str, uint32_t counter) {
-    canvas_draw_str(canvas, 20, 20, "Hi from display3!");
-    sprintf(str, "Count: %lu", counter);
-    canvas_draw_str(canvas, 20, 40, str);
-}
 
 DrunkDashboard* drunk_dashboard_alloc() {
     DrunkDashboard* drunk_dashboard = malloc(sizeof(DrunkDashboard));
     drunk_dashboard->scene_manager =
         scene_manager_alloc(&drunk_dashboard_scene_handlers, drunk_dashboard);
+    drunk_dashboard->gui = gui_alloc();
+    drunk_dashboard->view_pressure = drunk_dashboard_view_pressure_alloc();
     return drunk_dashboard;
 }
 
 void drunk_dashboard_free(DrunkDashboard* drunk_dashboard) {
+    drunk_dashboard_view_pressure_free(drunk_dashboard->view_pressure);
+    gui_free(drunk_dashboard->gui);
     scene_manager_free(drunk_dashboard->scene_manager);
     free(drunk_dashboard);
 }
 
 void drunk_dashboard_run(DrunkDashboard* drunk_dashboard) {
-    UNUSED(drunk_dashboard);
-    Canvas* canvas0 = canvas_init(u8g2_4wire_hw_spi_stm32, u8g2_gpio_and_delay_stm32_display0);
-    Canvas* canvas1 = canvas_init(u8g2_4wire_hw_spi_stm32, u8g2_gpio_and_delay_stm32_display1);
-    Canvas* canvas2 = canvas_init(u8g2_4wire_hw_spi_stm32, u8g2_gpio_and_delay_stm32_display2);
-    Canvas* canvas3 = canvas_init(u8g2_4wire_hw_spi_stm32, u8g2_gpio_and_delay_stm32_display3);
-    uint32_t counter = 0;
-    uint32_t bar = 0;
-    char* str = malloc(100 * sizeof(char));
+    uint16_t pressure = 200;
+    gui_set_view_on_display(
+        drunk_dashboard->gui,
+        drunk_dashboard_view_pressure_get_view(drunk_dashboard->view_pressure),
+        0);
+    gui_draw(drunk_dashboard->gui);
+    drunk_dashboard_view_pressure_set_pressure(drunk_dashboard->view_pressure, pressure);
+    gui_set_view_on_display(
+        drunk_dashboard->gui,
+        drunk_dashboard_view_pressure_get_view(drunk_dashboard->view_pressure),
+        1);
+    gui_draw(drunk_dashboard->gui);
+    drunk_dashboard_view_pressure_set_pressure(drunk_dashboard->view_pressure, pressure);
+    gui_set_view_on_display(
+        drunk_dashboard->gui,
+        drunk_dashboard_view_pressure_get_view(drunk_dashboard->view_pressure),
+        2);
+    gui_draw(drunk_dashboard->gui);
+    drunk_dashboard_view_pressure_set_pressure(drunk_dashboard->view_pressure, pressure);
+    gui_set_view_on_display(
+        drunk_dashboard->gui,
+        drunk_dashboard_view_pressure_get_view(drunk_dashboard->view_pressure),
+        3);
+    gui_draw(drunk_dashboard->gui);
+    drunk_dashboard_view_pressure_set_pressure(drunk_dashboard->view_pressure, pressure);
     while(true) {
-        canvas_clear(canvas0);
-        canvas_clear(canvas1);
-        canvas_clear(canvas2);
-        canvas_clear(canvas3);
-
-        draw_display0(canvas0);
-        draw_display1(canvas1);
-        draw_display2(canvas2, str, bar);
-        draw_display3(canvas3, str, counter);
-
-        canvas_commit(canvas0);
-        canvas_commit(canvas1);
-        canvas_commit(canvas2);
-        canvas_commit(canvas3);
-
-        // halk_delay_ms(100);
-        counter++;
-        bar += 3;
-        if(bar >= 350) bar = 0;
+        drunk_dashboard_view_pressure_set_pressure(drunk_dashboard->view_pressure, pressure);
+        gui_draw(drunk_dashboard->gui);
+        pressure++;
+        if(pressure >= 350) pressure = 0;
     }
-    free(str);
-    canvas_free(canvas0);
-    canvas_free(canvas1);
-    canvas_free(canvas2);
-    canvas_free(canvas3);
 }
