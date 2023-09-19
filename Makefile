@@ -81,9 +81,12 @@ C_SOURCES += \
 	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_tim.c \
 	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_spi.c
 C_SOURCES += $(wildcard src/*.c)
-C_SOURCES += $(wildcard src/scenes/*.c)
-C_SOURCES += $(wildcard src/views/*.c)
+C_SOURCES += $(wildcard src/main/*.c)
+C_SOURCES += $(wildcard src/main/scenes/*.c)
+C_SOURCES += $(wildcard src/main/views/*.c)
+C_SOURCES += $(wildcard src/gui/*.c)
 C_SOURCES += $(wildcard src/halk/*.c)
+C_SOURCES += $(wildcard src/halk_hi/*.c)
 C_SOURCES += $(wildcard stm/Core/Src/*.c)
 C_SOURCES += $(wildcard lib/u8g2/*.c)
 

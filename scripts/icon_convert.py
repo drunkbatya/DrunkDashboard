@@ -9,14 +9,14 @@ ICONS_SUPPORTED_FORMATS = ["png"]
 
 ICONS_TEMPLATE_H_HEADER = """#pragma once
 
-#include <icon.h>
+#include <gui/icon.h>
 
 """
 ICONS_TEMPLATE_H_ICON_NAME = "extern const Icon {name};\n"
 
 ICONS_TEMPLATE_C_HEADER = """#include "{assets_filename}.h"
 
-#include <icon_i.h>
+#include <gui/icon_i.h>
 
 """
 ICONS_TEMPLATE_C_FRAME = "const uint8_t {name}[] = {data};\n"

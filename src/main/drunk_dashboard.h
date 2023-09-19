@@ -1,8 +1,8 @@
 #pragma once
 
-#include <scene_manager_i.h>
+#include <gui/scene_manager_i.h>
 #include <halk/halk.h>
-#include <scenes/drunk_dashboard_scene.h>
+#include "scenes/drunk_dashboard_scene.h"
 
 typedef struct {
     SceneManager* scene_manager;

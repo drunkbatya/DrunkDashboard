@@ -1,4 +1,4 @@
-#include <drunk_dashboard.h>
+#include <main/drunk_dashboard.h>
 
 void drunk_dashboard_scene_main_on_enter(void* context) {
     UNUSED(context);

@@ -1,5 +1,5 @@
 #include "drunk_dashboard.h"
-#include <canvas.h>
+#include <gui/canvas.h>
 #include <stdbool.h>
 #include <halk/halk_delay.h>
 #include <u8g2/u8g2_glue.h>

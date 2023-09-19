@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <drunk_dashboard.h>
+#include <main/drunk_dashboard.h>
 
 /* USER CODE END Includes */
 

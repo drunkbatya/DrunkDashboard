@@ -1,9 +1,9 @@
 #include "u8g2_glue.h"
-#include <hardware.h>
 #include <halk/halk.h>
 #include <halk/halk_delay.h>
 #include <halk/halk_spi.h>
 #include <halk/halk_gpio.h>
+#include <halk_hi/hardware.h>
 
 uint8_t
     u8g2_gpio_and_delay_stm32_display0(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr) {
