@@ -1,4 +1,4 @@
-#include "icon.h"
+#include "icon_i.h"
 
 uint8_t icon_get_width(const Icon* instance) {
     return instance->width;

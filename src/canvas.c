@@ -1,4 +1,4 @@
-#include "canvas.h"
+#include "canvas_i.h"
 #include <stdbool.h>
 #include <malloc.h>
 

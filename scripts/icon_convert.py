@@ -16,6 +16,8 @@ ICONS_TEMPLATE_H_ICON_NAME = "extern const Icon {name};\n"
 
 ICONS_TEMPLATE_C_HEADER = """#include "{assets_filename}.h"
 
+#include <icon_i.h>
+
 """
 ICONS_TEMPLATE_C_FRAME = "const uint8_t {name}[] = {data};\n"
 ICONS_TEMPLATE_C_DATA = "const uint8_t* const {name}[] = {data};\n"

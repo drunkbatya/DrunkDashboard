@@ -1,6 +1,6 @@
 #pragma once
 
-#include <scene_manager.h>
+#include <scene_manager_i.h>
 #include <halk/halk.h>
 #include <scenes/drunk_dashboard_scene.h>
 

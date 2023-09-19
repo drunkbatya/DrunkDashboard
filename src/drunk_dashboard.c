@@ -73,7 +73,7 @@ void drunk_dashboard_run(DrunkDashboard* drunk_dashboard) {
         canvas_commit(canvas2);
         canvas_commit(canvas3);
 
-        halk_delay_ms(500);
+        // halk_delay_ms(100);
         counter++;
         bar += 3;
         if(bar >= 350) bar = 0;

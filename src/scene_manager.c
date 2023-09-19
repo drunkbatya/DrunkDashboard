@@ -1,4 +1,4 @@
-#include "scene_manager.h"
+#include "scene_manager_i.h"
 
 SceneManager* scene_manager_alloc(const SceneManagerHandlers* scene_handlers, void* context) {
     SceneManager* scene_manager = malloc(sizeof(SceneManager));

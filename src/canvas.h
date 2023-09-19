@@ -31,11 +31,7 @@ typedef enum {
     CanvasIconRotation270,
 } CanvasIconRotation;
 
-typedef struct {
-    u8g2_t fb;
-    uint8_t width;
-    uint8_t height;
-} Canvas;
+typedef struct Canvas Canvas;
 
 Canvas* canvas_init(u8x8_msg_cb u8g2_comm_cb, u8x8_msg_cb u8g2_gpio_and_delay_cb);
 void canvas_free(Canvas* canvas);

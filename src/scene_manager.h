@@ -1,13 +1,8 @@
 #pragma once
 
-#include <mlib/m-array.h>
 #include <stdint.h>
-
-ARRAY_DEF(SceneManagerIdStack, uint32_t, M_DEFAULT_OPLIST);
-
-typedef struct {
-    uint32_t state;
-} SceneManagerScene;
+#include <stdbool.h>
+#include <stdint.h>
 
 typedef enum {
     SceneManagerEventTypeCustom,
@@ -31,12 +26,7 @@ typedef struct {
     const uint32_t scene_num;
 } SceneManagerHandlers;
 
-typedef struct {
-    SceneManagerIdStack_t scene_id_stack;
-    const SceneManagerHandlers* scene_handlers;
-    SceneManagerScene* scenes;
-    void* context;
-} SceneManager;
+typedef struct SceneManager SceneManager;
 
 SceneManager* scene_manager_alloc(const SceneManagerHandlers* scene_handlers, void* context);
 void scene_manager_free(SceneManager* scene_manager);
