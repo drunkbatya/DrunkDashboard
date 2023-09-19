@@ -3,7 +3,7 @@
 #include <gui/scene_manager.h>
 
 // Generate scene id and total number
-#define ADD_SCENE(prefix, name, id) BadUsbScene##id,
+#define ADD_SCENE(prefix, name, id) DrunkDashboardScene##id,
 typedef enum {
 #include "drunk_dashboard_scene_config.h"
     DrunkDashboardSceneNum,

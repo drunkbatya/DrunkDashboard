@@ -39,6 +39,12 @@ void gui_remove_view_from_display(Gui* gui, uint8_t disp_number) {
     gui->views[disp_number] = NULL;
 }
 
+void gui_remove_views_from_all_displays(Gui* gui) {
+    for(uint8_t disp_number = 0; disp_number < gui->display_count; disp_number++) {
+        gui->views[disp_number] = NULL;
+    }
+}
+
 View* gui_get_view_from_display(Gui* gui, uint8_t disp_number) {
     if(disp_number >= gui->display_count) return NULL;
     return gui->views[disp_number];

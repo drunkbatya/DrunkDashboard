@@ -23,15 +23,8 @@ void drunk_dashboard_free(DrunkDashboard* drunk_dashboard) {
 }
 
 void drunk_dashboard_run(DrunkDashboard* drunk_dashboard) {
+    scene_manager_next_scene(drunk_dashboard->scene_manager, DrunkDashboardSceneMain);
     uint16_t pressure = 200;
-    gui_set_view_on_display(
-        drunk_dashboard->gui,
-        drunk_dashboard_view_pressure_get_view(drunk_dashboard->view_pressure),
-        1);
-    gui_set_view_on_display(
-        drunk_dashboard->gui,
-        drunk_dashboard_view_pressure_get_view(drunk_dashboard->view_pressure),
-        3);
     while(true) {
         drunk_dashboard_view_pressure_set_pressure(drunk_dashboard->view_pressure, pressure);
         gui_draw(drunk_dashboard->gui);
