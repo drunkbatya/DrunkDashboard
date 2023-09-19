@@ -27,27 +27,11 @@ void drunk_dashboard_run(DrunkDashboard* drunk_dashboard) {
     gui_set_view_on_display(
         drunk_dashboard->gui,
         drunk_dashboard_view_pressure_get_view(drunk_dashboard->view_pressure),
-        0);
-    gui_draw(drunk_dashboard->gui);
-    drunk_dashboard_view_pressure_set_pressure(drunk_dashboard->view_pressure, pressure);
-    gui_set_view_on_display(
-        drunk_dashboard->gui,
-        drunk_dashboard_view_pressure_get_view(drunk_dashboard->view_pressure),
         1);
-    gui_draw(drunk_dashboard->gui);
-    drunk_dashboard_view_pressure_set_pressure(drunk_dashboard->view_pressure, pressure);
-    gui_set_view_on_display(
-        drunk_dashboard->gui,
-        drunk_dashboard_view_pressure_get_view(drunk_dashboard->view_pressure),
-        2);
-    gui_draw(drunk_dashboard->gui);
-    drunk_dashboard_view_pressure_set_pressure(drunk_dashboard->view_pressure, pressure);
     gui_set_view_on_display(
         drunk_dashboard->gui,
         drunk_dashboard_view_pressure_get_view(drunk_dashboard->view_pressure),
         3);
-    gui_draw(drunk_dashboard->gui);
-    drunk_dashboard_view_pressure_set_pressure(drunk_dashboard->view_pressure, pressure);
     while(true) {
         drunk_dashboard_view_pressure_set_pressure(drunk_dashboard->view_pressure, pressure);
         gui_draw(drunk_dashboard->gui);

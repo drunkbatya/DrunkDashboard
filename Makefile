@@ -61,9 +61,15 @@ endif
 
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 
+
 LIBS = -lc -lm -lnosys
 LIBDIR =
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
+LDFLAGS = $(MCU) \
+	-specs=nano.specs \
+	-T$(LDSCRIPT) $(LIBDIR) $(LIBS) \
+	-Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref \
+	-Wl,--gc-sections \
+	-Wl,-wrap,malloc
 
 ASSETS_SOURCES = $(shell find $(ASSETS_SOURCE_DIR) -type f -name '*.png')
 
