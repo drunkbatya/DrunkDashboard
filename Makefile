@@ -51,6 +51,11 @@ C_INCLUDES = \
 	-Istm/Drivers/CMSIS/Device/ST/STM32H7xx/Include \
 	-Istm/Drivers/CMSIS/Include
 
+C_INCLUDES += \
+	-Istm/Middlewares/Third_Party/FreeRTOS/Source/include \
+	-Istm/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 \
+	-Istm/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F
+
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) $(WARN) -fdata-sections -ffunction-sections
 
 CFLAGS += $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) $(WARN) -fdata-sections -ffunction-sections
@@ -86,6 +91,20 @@ C_SOURCES += \
 	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_rcc.c \
 	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_tim.c \
 	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_spi.c
+
+C_SOURCES += \
+	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_pwr.c \
+	stm/Core/Src/freertos.c \
+	stm/Middlewares/Third_Party/FreeRTOS/Source/croutine.c \
+	stm/Middlewares/Third_Party/FreeRTOS/Source/event_groups.c \
+	stm/Middlewares/Third_Party/FreeRTOS/Source/list.c \
+	stm/Middlewares/Third_Party/FreeRTOS/Source/queue.c \
+	stm/Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c \
+	stm/Middlewares/Third_Party/FreeRTOS/Source/tasks.c \
+	stm/Middlewares/Third_Party/FreeRTOS/Source/timers.c \
+	stm/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c \
+	stm/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c \
+	stm/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c
 C_SOURCES += $(wildcard src/*.c)
 C_SOURCES += $(wildcard src/main/*.c)
 C_SOURCES += $(wildcard src/main/scenes/*.c)
@@ -141,13 +160,13 @@ $(ASSETS_BUILD_DIR):
 .PHONY: lint
 lint:
 	find . -type f \( -name "*.c" -o -name "*.h" \) \
-		\( -path "./src/*" -o -path "./src/*" \) \
+		\( -path "./lib/u8g2/*" -o -path "./src/*" \) \
         | xargs clang-format --Werror --style=file -i --dry-run
 
 .PHONY: format
 format:
 	find . -type f \( -name "*.c" -o -name "*.h" \) \
-		\( -path "./src/*" -o -path "./src/*" \) \
+		\( -path "./lib/u8g2/*" -o -path "./src/*" \) \
         | xargs clang-format --Werror --style=file -i
 
 .PHONY: flash
