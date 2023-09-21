@@ -55,6 +55,10 @@ task.h is included from an application file. */
 /* Assumes 8bit bytes! */
 #define heapBITS_PER_BYTE		( ( size_t ) 8 )
 
+#ifndef PLACE_IN_SECTION
+#define PLACE_IN_SECTION(x) __attribute__((section(x)))
+#endif
+
 /* Allocate the memory for the heap. */
 #if( configAPPLICATION_ALLOCATED_HEAP == 1 )
 	/* The application writer has already defined the array used for the RTOS
@@ -315,6 +319,12 @@ BlockLink_t *pxLink;
 size_t xPortGetFreeHeapSize( void )
 {
 	return xFreeBytesRemaining;
+}
+/*-----------------------------------------------------------*/
+
+size_t xPortGetTotalHeapSize( void )
+{
+	return configTOTAL_HEAP_SIZE;
 }
 /*-----------------------------------------------------------*/
 

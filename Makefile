@@ -74,7 +74,10 @@ LDFLAGS = $(MCU) \
 	-T$(LDSCRIPT) $(LIBDIR) $(LIBS) \
 	-Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref \
 	-Wl,--gc-sections \
-	-Wl,-wrap,malloc
+	-Wl,--wrap,_malloc_r \
+	-Wl,--wrap,_free_r \
+	-Wl,--wrap,_calloc_r \
+	-Wl,--wrap,_realloc_r
 
 ASSETS_SOURCES = $(shell find $(ASSETS_SOURCE_DIR) -type f -name '*.png')
 

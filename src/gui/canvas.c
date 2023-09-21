@@ -1,6 +1,6 @@
 #include "canvas_i.h"
 #include <stdbool.h>
-#include <malloc.h>
+#include <halk/halk_memmory.h>
 
 Canvas* canvas_init(u8x8_msg_cb u8g2_comm_cb, u8x8_msg_cb u8g2_gpio_and_delay_cb) {
     Canvas* canvas = malloc(sizeof(Canvas));
@@ -242,4 +242,9 @@ void canvas_set_font(Canvas* canvas, CanvasFont font) {
     } else {
         return;
     }
+}
+
+uint16_t canvas_get_string_width(Canvas* canvas, const char* str) {
+    if(!str) return 0;
+    return u8g2_GetStrWidth(&canvas->fb, str);
 }

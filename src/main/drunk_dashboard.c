@@ -12,10 +12,12 @@ DrunkDashboard* drunk_dashboard_alloc() {
         scene_manager_alloc(&drunk_dashboard_scene_handlers, drunk_dashboard);
     drunk_dashboard->gui = gui_alloc();
     drunk_dashboard->view_pressure = drunk_dashboard_view_pressure_alloc();
+    drunk_dashboard->view_debug = drunk_dashboard_view_debug_alloc();
     return drunk_dashboard;
 }
 
 void drunk_dashboard_free(DrunkDashboard* drunk_dashboard) {
+    drunk_dashboard_view_debug_free(drunk_dashboard->view_debug);
     drunk_dashboard_view_pressure_free(drunk_dashboard->view_pressure);
     gui_free(drunk_dashboard->gui);
     scene_manager_free(drunk_dashboard->scene_manager);

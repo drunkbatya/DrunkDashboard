@@ -5,11 +5,13 @@
 #include <halk/halk.h>
 #include "scenes/drunk_dashboard_scene.h"
 #include "views/drunk_dashboard_view_pressure.h"
+#include "views/drunk_dashboard_view_debug.h"
 
 typedef struct {
     Gui* gui;
     SceneManager* scene_manager;
     DrunkDashboardViewPressure* view_pressure;
+    DrunkDashboardViewDebug* view_debug;
 } DrunkDashboard;
 
 DrunkDashboard* drunk_dashboard_alloc();

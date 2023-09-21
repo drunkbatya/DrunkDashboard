@@ -52,3 +52,4 @@ uint8_t canvas_get_height(Canvas* canvas);
 void canvas_set_color(Canvas* canvas, CanvasColor color);
 void canvas_invert_color(Canvas* canvas);
 void canvas_set_font(Canvas* canvas, CanvasFont font);
+uint16_t canvas_get_string_width(Canvas* canvas, const char* str);
