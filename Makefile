@@ -93,11 +93,12 @@ C_SOURCES += \
 	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_usart.c \
 	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_rcc.c \
 	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_tim.c \
-	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_spi.c
-
-C_SOURCES += \
+	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_spi.c \
 	stm/Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_ll_pwr.c \
 	stm/Core/Src/freertos.c \
+	stm/Core/Src/main.c \
+	stm/Core/Src/stm32h7xx_it.c \
+	stm/Core/Src/system_stm32h7xx.c \
 	stm/Middlewares/Third_Party/FreeRTOS/Source/croutine.c \
 	stm/Middlewares/Third_Party/FreeRTOS/Source/event_groups.c \
 	stm/Middlewares/Third_Party/FreeRTOS/Source/list.c \
@@ -106,16 +107,8 @@ C_SOURCES += \
 	stm/Middlewares/Third_Party/FreeRTOS/Source/tasks.c \
 	stm/Middlewares/Third_Party/FreeRTOS/Source/timers.c \
 	stm/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c \
-	stm/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c \
 	stm/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c
-C_SOURCES += $(wildcard src/*.c)
-C_SOURCES += $(wildcard src/main/*.c)
-C_SOURCES += $(wildcard src/main/scenes/*.c)
-C_SOURCES += $(wildcard src/main/views/*.c)
-C_SOURCES += $(wildcard src/gui/*.c)
-C_SOURCES += $(wildcard src/halk/*.c)
-C_SOURCES += $(wildcard src/halk_hi/*.c)
-C_SOURCES += $(wildcard stm/Core/Src/*.c)
+C_SOURCES += $(shell find $(SRCDIR) -type f -name '*.c')
 C_SOURCES += $(wildcard lib/u8g2/*.c)
 
 ASM_SOURCES = stm/startup_stm32h743xx.s
@@ -136,7 +129,7 @@ $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
 	@echo "\tASM\t" $<
 	@$(AS) -c $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/$(TARGET).elf: build/assets/build/assets_icons.o $(HEADERS) $(OBJECTS) Makefile
+$(BUILD_DIR)/$(TARGET).elf: build/assets/build/assets_icons.o $(LDSCRIPT) $(HEADERS) $(OBJECTS) Makefile
 	@echo "\tLD\t" $@
 	@$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 	@$(SZ) $@

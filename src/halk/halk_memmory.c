@@ -1,9 +1,5 @@
 #include "halk_memmory.h"
-
-extern void* pvPortMalloc(size_t xSize);
-extern void vPortFree(void* pv);
-extern size_t xPortGetFreeHeapSize(void);
-extern size_t xPortGetTotalHeapSize(void);
+#include "halk_memmory_heap.h"
 
 void* malloc(size_t size) {
     void* ptr = pvPortMalloc(size);
