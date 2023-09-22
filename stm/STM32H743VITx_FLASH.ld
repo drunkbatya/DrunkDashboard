@@ -167,17 +167,16 @@ SECTIONS
   } >DTCMRAM
 
   /* User_heap_stack section, used to check that there is enough RAM left */
-  ._user_heap_stack :
+  /* DSECT: https://software-dl.ti.com/ccs/esd/documents/sdto_cgt_linker_special_section_types.html */
+  ._user_heap_stack(DSECT):
   {
     . = ALIGN(8);
-    PROVIDE ( end = . );
-    PROVIDE ( _end = . );
-    . = . + _Min_Heap_Size;
+    __heap_start__ = .;
+    . = ORIGIN(DTCMRAM) + LENGTH(DTCMRAM) - _Min_Stack_Size;
+    __heap_end__ = .;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >DTCMRAM
-
-  
 
   /* Remove information from the standard libraries */
   /DISCARD/ :
