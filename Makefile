@@ -22,9 +22,10 @@ FLOAT-ABI = -mfloat-abi=hard
 MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 DEBUG = 1
 OPT = -Og
-LDSCRIPT = stm/STM32H743VITx_FLASH.ld
+#LDSCRIPT = stm/STM32H743VITx_FLASH.ld
+LDSCRIPT = h750/STM32H750VBTx_FLASH.ld
 MAKEFLAGS+="-j -l $(shell sysctl hw.ncpu | awk '{print $2}') "
-WARN = -Wall -Werror -Wextra
+#WARN = -Wall -Werror -Wextra
 
 AS_DEFS =
 
@@ -38,12 +39,14 @@ C_DEFS = \
 	-DHSI_VALUE=64000000 \
 	-DLSI_VALUE=32000 \
 	-DVDD_VALUE=3300 \
-	-DSTM32H743xx
+	-DSTM32H750xx	-DSTM32H743xx
+
 
 AS_INCLUDES =
 
 C_INCLUDES = \
 	-Isrc \
+	-Isrc/system \
 	-Ilib \
 	-Iassets/build \
 	-Istm/Core/Inc \
@@ -108,10 +111,12 @@ C_SOURCES += \
 	stm/Middlewares/Third_Party/FreeRTOS/Source/timers.c \
 	stm/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c \
 	stm/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c
+
 C_SOURCES += $(shell find $(SRCDIR) -type f -name '*.c')
 C_SOURCES += $(wildcard lib/u8g2/*.c)
 
-ASM_SOURCES = stm/startup_stm32h743xx.s
+#ASM_SOURCES = stm/startup_stm32h743xx.s
+ASM_SOURCES = h750/startup_stm32h750xx.s
 
 OBJECTS += $(addprefix $(BUILD_DIR)/, $(C_SOURCES:.c=.o))
 OBJECTS += $(addprefix $(BUILD_DIR)/, $(ASM_SOURCES:.s=.o))
@@ -172,7 +177,7 @@ flash: $(BUILD_DIR)/$(TARGET).bin
 
 .PHONY: flash-dfu
 flash-dfu: $(BUILD_DIR)/$(TARGET).bin
-	dfu-util -a 0 -D $(BUILD_DIR)/$(TARGET).bin -s 0x08000000
+	dfu-util -w -a 0 -D $(BUILD_DIR)/$(TARGET).bin -s 0x08000000
 
 .PHONY: clean
 clean:

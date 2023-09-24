@@ -22,8 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <main/drunk_dashboard.h>
-#include <halk/halk.h>
+#include <drunk_dashboard.h>
 
 /* USER CODE END Includes */
 
@@ -113,6 +112,7 @@ int main(void)
   MX_TIM1_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  drunk_dashboard_init();
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -530,15 +530,12 @@ static void MX_GPIO_Init(void)
 void StartTestTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
-    UNUSED(argument);
-  DrunkDashboard* drunk_dashboard = drunk_dashboard_alloc();
-  drunk_dashboard_run(drunk_dashboard);
+  UNUSED(argument);
   /* Infinite loop */
   for(;;)
   {
     osDelay(1);
   }
-  drunk_dashboard_free(drunk_dashboard);
   /* USER CODE END 5 */
 }
 

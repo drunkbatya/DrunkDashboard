@@ -17,6 +17,7 @@ Canvas* canvas_init(u8x8_msg_cb u8g2_comm_cb, u8x8_msg_cb u8g2_gpio_and_delay_cb
     canvas->width = u8g2_GetDisplayWidth(&canvas->fb);
     canvas->height = u8g2_GetDisplayHeight(&canvas->fb);
     canvas_clear(canvas);
+    canvas_draw_str(canvas, 0, 10, "Display init completed!");
     canvas_commit(canvas);
 
     return canvas;

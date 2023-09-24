@@ -8,7 +8,7 @@
 void drunk_dashboard_view_debug_draw_callback(Canvas* canvas, void* context) {
     DrunkDashboardViewDebug* app = context;
     UNUSED(app);
-    char* str = malloc(sizeof(char) * 100);
+    char str[30];
     size_t heap_free = halk_memmory_get_free_heap();
     size_t heap_total = halk_memmory_get_total_heap();
 
@@ -23,8 +23,6 @@ void drunk_dashboard_view_debug_draw_callback(Canvas* canvas, void* context) {
     canvas_draw_str(canvas, 0, 20, str);
     sprintf(str, "Total heap: %u bytes", heap_total);
     canvas_draw_str(canvas, 0, 30, str);
-
-    free(str);
 }
 
 DrunkDashboardViewDebug* drunk_dashboard_view_debug_alloc() {

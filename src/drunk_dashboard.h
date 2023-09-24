@@ -14,6 +14,4 @@ typedef struct {
     DrunkDashboardViewDebug* view_debug;
 } DrunkDashboard;
 
-DrunkDashboard* drunk_dashboard_alloc();
-void drunk_dashboard_run(DrunkDashboard* drunk_dashboard);
-void drunk_dashboard_free(DrunkDashboard* drunk_dashboard);
+void drunk_dashboard_init();

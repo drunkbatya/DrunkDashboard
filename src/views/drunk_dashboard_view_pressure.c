@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 void drunk_dashboard_view_pressure_draw_callback(Canvas* canvas, void* context) {
-    char* str = malloc(sizeof(char) * 100);
+    char str[30];
     DrunkDashboardViewPressure* app = context;
     sprintf(str, "%u.%.2u", app->pressure / 100, app->pressure % 100);
     // canvas_draw_frame(canvas, 0, 0, canvas_get_width(canvas), canvas_get_height(canvas));
@@ -16,7 +16,6 @@ void drunk_dashboard_view_pressure_draw_callback(Canvas* canvas, void* context) 
     canvas_draw_str(canvas, 57, 52, str);
     canvas_set_font(canvas, CanvasFontSecondary);
     canvas_draw_str(canvas, 105, 51, "bar");
-    free(str);
 }
 
 DrunkDashboardViewPressure* drunk_dashboard_view_pressure_alloc() {
