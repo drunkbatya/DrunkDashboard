@@ -1,9 +1,9 @@
 #include "u8g2_glue.h"
-#include <halk/halk.h>
-#include <halk/halk_delay.h>
-#include <halk/halk_spi.h>
-#include <halk/halk_gpio.h>
-#include <halk/halk_hardware.h>
+#include <system_core_defs.h>
+#include <system_delay.h>
+#include <halk_spi.h>
+#include <halk_gpio.h>
+#include <halk_hardware.h>
 
 uint8_t
     u8g2_gpio_and_delay_stm32_display0(u8x8_t* u8x8, uint8_t msg, uint8_t arg_int, void* arg_ptr) {
@@ -13,13 +13,13 @@ uint8_t
     case U8X8_MSG_GPIO_AND_DELAY_INIT:
         break;
     case U8X8_MSG_DELAY_MILLI:
-        halk_delay_ms(arg_int);
+        system_delay_ms(arg_int);
         break;
     case U8X8_MSG_DELAY_10MICRO:
-        halk_delay_ms(1);
+        system_delay_ms(1);
         break;
     case U8X8_MSG_DELAY_100NANO:
-        halk_delay_ms(1);
+        system_delay_ms(1);
         break;
     case U8X8_MSG_GPIO_RESET:
         halk_gpio_pin_write(&display0_rst_pin, arg_int);
@@ -44,10 +44,10 @@ uint8_t
     case U8X8_MSG_GPIO_AND_DELAY_INIT:
         break;
     case U8X8_MSG_DELAY_MILLI:
-        halk_delay_ms(arg_int);
+        system_delay_ms(arg_int);
         break;
     case U8X8_MSG_DELAY_10MICRO:
-        halk_delay_ms(1);
+        system_delay_ms(1);
         break;
     case U8X8_MSG_DELAY_100NANO:
         asm("nop");
@@ -75,10 +75,10 @@ uint8_t
     case U8X8_MSG_GPIO_AND_DELAY_INIT:
         break;
     case U8X8_MSG_DELAY_MILLI:
-        halk_delay_ms(arg_int);
+        system_delay_ms(arg_int);
         break;
     case U8X8_MSG_DELAY_10MICRO:
-        halk_delay_ms(1);
+        system_delay_ms(1);
         break;
     case U8X8_MSG_DELAY_100NANO:
         asm("nop");
@@ -106,10 +106,10 @@ uint8_t
     case U8X8_MSG_GPIO_AND_DELAY_INIT:
         break;
     case U8X8_MSG_DELAY_MILLI:
-        halk_delay_ms(arg_int);
+        system_delay_ms(arg_int);
         break;
     case U8X8_MSG_DELAY_10MICRO:
-        halk_delay_ms(1);
+        system_delay_ms(1);
         break;
     case U8X8_MSG_DELAY_100NANO:
         asm("nop");
@@ -137,10 +137,10 @@ uint8_t
     case U8X8_MSG_GPIO_AND_DELAY_INIT:
         break;
     case U8X8_MSG_DELAY_MILLI:
-        halk_delay_ms(arg_int);
+        system_delay_ms(arg_int);
         break;
     case U8X8_MSG_DELAY_10MICRO:
-        halk_delay_ms(1);
+        system_delay_ms(1);
         break;
     case U8X8_MSG_DELAY_100NANO:
         asm("nop");
@@ -168,10 +168,10 @@ uint8_t
     case U8X8_MSG_GPIO_AND_DELAY_INIT:
         break;
     case U8X8_MSG_DELAY_MILLI:
-        halk_delay_ms(arg_int);
+        system_delay_ms(arg_int);
         break;
     case U8X8_MSG_DELAY_10MICRO:
-        halk_delay_ms(1);
+        system_delay_ms(1);
         break;
     case U8X8_MSG_DELAY_100NANO:
         asm("nop");
@@ -199,10 +199,10 @@ uint8_t
     case U8X8_MSG_GPIO_AND_DELAY_INIT:
         break;
     case U8X8_MSG_DELAY_MILLI:
-        halk_delay_ms(arg_int);
+        system_delay_ms(arg_int);
         break;
     case U8X8_MSG_DELAY_10MICRO:
-        halk_delay_ms(1);
+        system_delay_ms(1);
         break;
     case U8X8_MSG_DELAY_100NANO:
         asm("nop");
@@ -230,10 +230,10 @@ uint8_t
     case U8X8_MSG_GPIO_AND_DELAY_INIT:
         break;
     case U8X8_MSG_DELAY_MILLI:
-        halk_delay_ms(arg_int);
+        system_delay_ms(arg_int);
         break;
     case U8X8_MSG_DELAY_10MICRO:
-        halk_delay_ms(1);
+        system_delay_ms(1);
         break;
     case U8X8_MSG_DELAY_100NANO:
         asm("nop");
@@ -261,10 +261,10 @@ uint8_t
     case U8X8_MSG_GPIO_AND_DELAY_INIT:
         break;
     case U8X8_MSG_DELAY_MILLI:
-        halk_delay_ms(arg_int);
+        system_delay_ms(arg_int);
         break;
     case U8X8_MSG_DELAY_10MICRO:
-        halk_delay_ms(1);
+        system_delay_ms(1);
         break;
     case U8X8_MSG_DELAY_100NANO:
         asm("nop");

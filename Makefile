@@ -15,7 +15,6 @@ BUILD_DIR = build
 ASSETS_DIR = assets
 ASSETS_SOURCE_DIR = $(ASSETS_DIR)/src
 ASSETS_BUILD_DIR = $(ASSETS_DIR)/build
-SRCDIR = src
 CPU = -mcpu=cortex-m7
 FPU = -mfpu=fpv5-d16
 FLOAT-ABI = -mfloat-abi=hard
@@ -23,7 +22,7 @@ MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 DEBUG = 1
 OPT = -Og
 #LDSCRIPT = stm/STM32H743VITx_FLASH.ld
-LDSCRIPT = h750/STM32H750VBTx_FLASH.ld
+LDSCRIPT = stm/STM32H750VBTx_FLASH.ld
 MAKEFLAGS+="-j -l $(shell sysctl hw.ncpu | awk '{print $2}') "
 #WARN = -Wall -Werror -Wextra
 
@@ -45,8 +44,11 @@ C_DEFS = \
 AS_INCLUDES =
 
 C_INCLUDES = \
-	-Isrc \
-	-Isrc/system \
+	-Iapplications/services \
+	-Iapplications/main \
+	-Isystem \
+	-Isystem/core \
+	-Ihalk \
 	-Ilib \
 	-Iassets/build \
 	-Istm/Core/Inc \
@@ -84,7 +86,9 @@ LDFLAGS = $(MCU) \
 
 ASSETS_SOURCES = $(shell find $(ASSETS_SOURCE_DIR) -type f -name '*.png')
 
-HEADERS = $(shell find $(SRCDIR) -type f -name '*.h')
+HEADERS = $(shell find applications -type f -name '*.h')
+HEADERS = $(shell find system -type f -name '*.h')
+HEADERS = $(shell find halk -type f -name '*.h')
 
 ifneq ($(ASSETS_SOURCES),)
 C_SOURCES = $(ASSETS_BUILD_DIR)/assets_icons.c
@@ -112,11 +116,13 @@ C_SOURCES += \
 	stm/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c \
 	stm/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c
 
-C_SOURCES += $(shell find $(SRCDIR) -type f -name '*.c')
+C_SOURCES += $(shell find applications -type f -name '*.c')
+C_SOURCES += $(shell find system -type f -name '*.c')
+C_SOURCES += $(shell find halk -type f -name '*.c')
 C_SOURCES += $(wildcard lib/u8g2/*.c)
 
 #ASM_SOURCES = stm/startup_stm32h743xx.s
-ASM_SOURCES = h750/startup_stm32h750xx.s
+ASM_SOURCES = stm/startup_stm32h750xx.s
 
 OBJECTS += $(addprefix $(BUILD_DIR)/, $(C_SOURCES:.c=.o))
 OBJECTS += $(addprefix $(BUILD_DIR)/, $(ASM_SOURCES:.s=.o))

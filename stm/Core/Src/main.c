@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <drunk_dashboard.h>
+#include <system.h>
 
 /* USER CODE END Includes */
 
@@ -112,7 +112,7 @@ int main(void)
   MX_TIM1_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  drunk_dashboard_init();
+  system_init();
   /* USER CODE END 2 */
 
   /* Init scheduler */
