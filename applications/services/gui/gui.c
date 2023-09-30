@@ -1,5 +1,8 @@
 #include "gui_i.h"
 #include <malloc.h>
+#include <system_core_defs.h>
+#include <system_record.h>
+#include <system_delay.h>
 #include <u8g2/u8g2_glue.h>
 
 static void gui_canvases_alloc(Gui* gui) {
@@ -55,5 +58,15 @@ void gui_draw(Gui* gui) {
         canvas_reset(gui->canvases[disp_number]);
         if(gui->views[disp_number]) view_draw(gui->views[disp_number], gui->canvases[disp_number]);
         canvas_commit(gui->canvases[disp_number]);
+    }
+}
+
+void gui_thread(void* context) {
+    UNUSED(context);
+    Gui* gui = gui_alloc();
+    system_record_create(RECORD_GUI, gui);
+    while(true) {
+        gui_draw(gui);
+        system_delay_ms(2);
     }
 }
