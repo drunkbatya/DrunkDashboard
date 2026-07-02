@@ -1,0 +1,8 @@
+/software/build/
+*.swo
+*.swp
+*.bak
+*.history
+*.zip
+*.pretty
+*.DS_Store
