@@ -1,0 +1,12 @@
+[submodule "software/src/lib/FreeRTOS-Kernel"]
+	path = software/src/lib/FreeRTOS-Kernel
+	url = https://github.com/FreeRTOS/FreeRTOS-Kernel.git
+[submodule "software/src/lib/mlib"]
+	path = software/src/lib/mlib
+	url = https://github.com/P-p-H-d/mlib.git
+[submodule "software/src/lib/stm32u5xx-hal-driver"]
+	path = software/src/lib/stm32u5xx-hal-driver
+	url = git@github.com:drunkbatya/stm32u5xx-hal-driver.git
+[submodule "software/src/lib/st_cmsis_device_u5"]
+	path = software/src/lib/st_cmsis_device_u5
+	url = https://github.com/STMicroelectronics/cmsis-device-u5
