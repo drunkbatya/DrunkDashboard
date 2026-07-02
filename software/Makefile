@@ -1,0 +1,7 @@
+include make/git.mk
+include make/variables.mk
+include make/tools.mk
+include make/sources.mk
+include make/flags.mk
+include make/targets.mk
+include make/rules.mk

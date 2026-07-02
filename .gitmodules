@@ -7,6 +7,3 @@
 [submodule "software/src/lib/stm32u5xx-hal-driver"]
 	path = software/src/lib/stm32u5xx-hal-driver
 	url = git@github.com:drunkbatya/stm32u5xx-hal-driver.git
-[submodule "software/src/lib/st_cmsis_device_u5"]
-	path = software/src/lib/st_cmsis_device_u5
-	url = https://github.com/STMicroelectronics/cmsis-device-u5
