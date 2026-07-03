@@ -24,15 +24,18 @@ const GpioPin gpio_disp_d7 = {.port = GPIOB, .pin = LL_GPIO_PIN_7};
 const GpioPin gpio_disp_pwm = {.port = GPIOA, .pin = LL_GPIO_PIN_8};
 
 const GpioPin gpio_button_ok = {.port = GPIOB, .pin = LL_GPIO_PIN_12};
+const GpioPin gpio_button_back = {.port = GPIOA, .pin = LL_GPIO_PIN_3};
+
+const GpioPin gpio_encoder_1_a = {.port = GPIOA, .pin = LL_GPIO_PIN_0};
+const GpioPin gpio_encoder_1_b = {.port = GPIOA, .pin = LL_GPIO_PIN_1};
+const GpioPin gpio_encoder_2_a = {.port = GPIOA, .pin = LL_GPIO_PIN_6};
+const GpioPin gpio_encoder_2_b = {.port = GPIOA, .pin = LL_GPIO_PIN_7};
 
 const GpioPin gpio_spi2_sck = {.port = GPIOB, .pin = LL_GPIO_PIN_10};
 const GpioPin gpio_spi2_miso = {.port = GPIOB, .pin = LL_GPIO_PIN_14};
 const GpioPin gpio_spi2_mosi = {.port = GPIOB, .pin = LL_GPIO_PIN_15};
 
 const GpioPin gpio_adc1_in7 = {.port = GPIOA, .pin = LL_GPIO_PIN_2};
-const GpioPin gpio_adc1_in8 = {.port = GPIOA, .pin = LL_GPIO_PIN_3};
-const GpioPin gpio_adc1_in11 = {.port = GPIOA, .pin = LL_GPIO_PIN_6};
-const GpioPin gpio_adc1_in12 = {.port = GPIOA, .pin = LL_GPIO_PIN_7};
 
 const GpioPin gpio_usart_tx = {.port = GPIOA, .pin = LL_GPIO_PIN_9};
 const GpioPin gpio_usart_rx = {.port = GPIOA, .pin = LL_GPIO_PIN_10};
@@ -42,6 +45,7 @@ const GpioPin gpio_i2c1_sda = {.port = GPIOB, .pin = LL_GPIO_PIN_9};
 
 const InputPin input_pins[] = {
     {.gpio = &gpio_button_ok, .key = InputKeyOk, .inverted = true, .name = "OK"},
+    {.gpio = &gpio_button_back, .key = InputKeyBack, .inverted = true, .name = "Back"},
 };
 
 const size_t input_pins_count = COUNT_OF(input_pins);
@@ -51,30 +55,6 @@ const GpioPinRecord gpio_pins[] = {
         .pin = &gpio_adc1_in7,
         .name = "PA2",
         .channel = FuriHalAdcChannel7,
-        .pwm_output = FuriHalPwmOutputIdNone,
-        .number = 0,
-        .debug = false,
-    },
-    {
-        .pin = &gpio_adc1_in8,
-        .name = "PA3",
-        .channel = FuriHalAdcChannel8,
-        .pwm_output = FuriHalPwmOutputIdNone,
-        .number = 0,
-        .debug = false,
-    },
-    {
-        .pin = &gpio_adc1_in11,
-        .name = "PA6",
-        .channel = FuriHalAdcChannel11,
-        .pwm_output = FuriHalPwmOutputIdNone,
-        .number = 0,
-        .debug = false,
-    },
-    {
-        .pin = &gpio_adc1_in12,
-        .name = "PA7",
-        .channel = FuriHalAdcChannel12,
         .pwm_output = FuriHalPwmOutputIdNone,
         .number = 0,
         .debug = false,
@@ -121,6 +101,8 @@ void furi_hal_resources_deinit_early(void) {
 void furi_hal_resources_init(void) {
     furi_hal_resources_init_input_pins(GpioModeInterruptRiseFall);
 
+    NVIC_SetPriority(EXTI3_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 5, 0));
+    NVIC_EnableIRQ(EXTI3_IRQn);
     NVIC_SetPriority(EXTI12_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 5, 0));
     NVIC_EnableIRQ(EXTI12_IRQn);
 

@@ -70,8 +70,8 @@ void furi_hal_clock_init(void) {
     LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
     LL_RCC_SetAPB3Prescaler(LL_RCC_APB3_DIV_1);
 
-    LL_Init1msTick(CPU_CLOCK_PLL_HZ);
     LL_SetSystemCoreClock(CPU_CLOCK_PLL_HZ);
+    LL_Init1msTick(SystemCoreClock);
     LL_SYSTICK_EnableIT();
     NVIC_SetPriority(
         SysTick_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), TICK_INT_PRIORITY, 0));

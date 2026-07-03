@@ -47,6 +47,8 @@ const IRQn_Type furi_hal_interrupt_irqn[FuriHalInterruptIdMax] = {
 
     // TIM2
     [FuriHalInterruptIdTIM2] = TIM2_IRQn,
+    [FuriHalInterruptIdTIM3] = TIM3_IRQn,
+    [FuriHalInterruptIdTIM5] = TIM5_IRQn,
 
     // DMA1
     [FuriHalInterruptIdDma1Ch1] = GPDMA1_Channel1_IRQn,
@@ -193,6 +195,14 @@ void furi_hal_interrupt_set_isr_ex(
 /* Timer 2 */
 void TIM2_IRQHandler(void) {
     furi_hal_interrupt_call(FuriHalInterruptIdTIM2);
+}
+
+void TIM3_IRQHandler(void) {
+    furi_hal_interrupt_call(FuriHalInterruptIdTIM3);
+}
+
+void TIM5_IRQHandler(void) {
+    furi_hal_interrupt_call(FuriHalInterruptIdTIM5);
 }
 
 /* Timer 1 Update */

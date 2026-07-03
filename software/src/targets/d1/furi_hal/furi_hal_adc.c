@@ -22,9 +22,6 @@ static FuriHalAdcHandle furi_hal_adc_handle = {0};
 
 static const FuriHalAdcChannelMap furi_hal_adc_channel_map[] = {
     [FuriHalAdcChannel7] = {ADC1, LL_ADC_CHANNEL_7},
-    [FuriHalAdcChannel8] = {ADC1, LL_ADC_CHANNEL_8},
-    [FuriHalAdcChannel11] = {ADC1, LL_ADC_CHANNEL_11},
-    [FuriHalAdcChannel12] = {ADC1, LL_ADC_CHANNEL_12},
 };
 
 static void furi_hal_adc1_init(void) {
@@ -33,7 +30,7 @@ static void furi_hal_adc1_init(void) {
     LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
 
     LL_GPIO_InitTypeDef gpio = {0};
-    gpio.Pin = LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | LL_GPIO_PIN_6 | LL_GPIO_PIN_7;
+    gpio.Pin = LL_GPIO_PIN_2;
     gpio.Mode = LL_GPIO_MODE_ANALOG;
     gpio.Pull = LL_GPIO_PULL_NO;
     LL_GPIO_Init(GPIOA, &gpio);

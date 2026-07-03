@@ -4,17 +4,16 @@
 
 static void dashboard_scene_canbus_submenu_callback(void* context, uint32_t index);
 
-static void dashboard_scene_canbus_rebuild_submenu(DashboardApp* app) {
+static void dashboard_scene_canbus_rebuild_submenu(DashboardApp* app, uint32_t selected_id) {
     app->can_frames_count = dashboard_can_worker_copy_snapshot(
         app->can_worker, app->can_frames, DASHBOARD_CAN_MAX_IDS);
-
-    uint32_t selected_id = submenu_get_selected_item(app->canbus_submenu);
 
     submenu_reset(app->canbus_submenu);
     submenu_set_header(app->canbus_submenu, "CAN messages");
 
     if(app->can_frames_count == 0) {
         submenu_add_item(app->canbus_submenu, "No messages", 0, NULL, app);
+        submenu_set_selected_item(app->canbus_submenu, 0);
         return;
     }
 
@@ -54,11 +53,16 @@ bool dashboard_scene_canbus_on_event(void* context, SceneManagerEvent event) {
             //dashboard_scene_canbus_rebuild_submenu(app);
             //consumed = true;
         } else if(event.event == DashboardAppCustomEventCanIdSelected) {
+            scene_manager_set_scene_state(
+                app->scene_manager, DashboardSceneCanbus, app->selected_can_id);
             scene_manager_next_scene(app->scene_manager, DashboardSceneCanbusDetail);
             consumed = true;
         }
     } else if(event.type == SceneManagerEventTypeTick) {
-        dashboard_scene_canbus_rebuild_submenu(app);
+        dashboard_scene_canbus_rebuild_submenu(
+            app, submenu_get_selected_item(app->canbus_submenu));
+        consumed = true;
+    } else if(event.type == SceneManagerEventTypeBack) {
         consumed = true;
     }
     return consumed;
@@ -71,11 +75,14 @@ void dashboard_scene_canbus_on_enter(void* context) {
     //    app->can_worker, dashboard_scene_canbus_data_updated_callback, app);
 
     submenu_reset(app->canbus_submenu);
-    dashboard_scene_canbus_rebuild_submenu(app);
+    dashboard_scene_canbus_rebuild_submenu(
+        app, scene_manager_get_scene_state(app->scene_manager, DashboardSceneCanbus));
 
     view_dispatcher_switch_to_view(app->view_dispatcher, DashboardAppViewCanbusSubmenu);
 }
 
 void dashboard_scene_canbus_on_exit(void* context) {
-    UNUSED(context);
+    DashboardApp* app = context;
+    scene_manager_set_scene_state(
+        app->scene_manager, DashboardSceneCanbus, submenu_get_selected_item(app->canbus_submenu));
 }

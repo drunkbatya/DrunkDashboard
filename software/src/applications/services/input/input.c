@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <furi.h>
+#include <furi_hal_encoder.h>
 #include <furi_hal_gpio.h>
 
 #define INPUT_DEBOUNCE_TICKS_HALF (INPUT_DEBOUNCE_TICKS / 2)
@@ -75,6 +76,41 @@ const char* input_get_type_name(InputType type) {
     }
 }
 
+static void
+    input_publish_synthetic_key(FuriPubSub* event_pubsub, InputKey key, uint32_t sequence_counter) {
+    InputEvent event = {
+        .sequence_source = INPUT_SEQUENCE_SOURCE_HARDWARE,
+        .sequence_counter = sequence_counter,
+        .key = key,
+    };
+
+    event.type = InputTypePress;
+    furi_pubsub_publish(event_pubsub, &event);
+
+    event.type = InputTypeShort;
+    furi_pubsub_publish(event_pubsub, &event);
+
+    event.type = InputTypeRelease;
+    furi_pubsub_publish(event_pubsub, &event);
+}
+
+static void input_publish_encoder_delta(
+    FuriPubSub* event_pubsub,
+    int32_t delta,
+    InputKey negative_key,
+    InputKey positive_key,
+    uint32_t* counter) {
+    while(delta > 0) {
+        input_publish_synthetic_key(event_pubsub, positive_key, (*counter)++);
+        delta--;
+    }
+
+    while(delta < 0) {
+        input_publish_synthetic_key(event_pubsub, negative_key, (*counter)++);
+        delta++;
+    }
+}
+
 int32_t input_srv(void* p) {
     UNUSED(p);
 
@@ -82,6 +118,7 @@ int32_t input_srv(void* p) {
     FuriPubSub* event_pubsub = furi_pubsub_alloc();
     uint32_t counter = 1;
     furi_record_create(RECORD_INPUT_EVENTS, event_pubsub);
+    furi_hal_encoder_set_callback(input_isr, thread_id);
 
 #ifdef INPUT_DEBUG
     furi_hal_gpio_init_simple(&gpio_ext_pa4, GpioModeOutputPushPull);
@@ -142,6 +179,14 @@ int32_t input_srv(void* p) {
                 furi_pubsub_publish(event_pubsub, &event);
             }
         }
+
+        int32_t encoder_vertical;
+        int32_t encoder_horizontal;
+        furi_hal_encoder_get_deltas(&encoder_vertical, &encoder_horizontal);
+        input_publish_encoder_delta(
+            event_pubsub, encoder_vertical, InputKeyUp, InputKeyDown, &counter);
+        input_publish_encoder_delta(
+            event_pubsub, encoder_horizontal, InputKeyLeft, InputKeyRight, &counter);
 
         if(is_changing) {
 #ifdef INPUT_DEBUG

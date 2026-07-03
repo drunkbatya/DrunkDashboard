@@ -40,6 +40,8 @@ static const FuriHalBusMapping furi_hal_bus_map[FuriHalBusMAX] = {
     [FuriHalBusFLASH] = {FuriHalBusDomainAhb1, LL_AHB1_GRP1_PERIPH_FLASH},
 
     [FuriHalBusTIM2] = {FuriHalBusDomainApb1Grp1, LL_APB1_GRP1_PERIPH_TIM2},
+    [FuriHalBusTIM3] = {FuriHalBusDomainApb1Grp1, LL_APB1_GRP1_PERIPH_TIM3},
+    [FuriHalBusTIM5] = {FuriHalBusDomainApb1Grp1, LL_APB1_GRP1_PERIPH_TIM5},
     [FuriHalBusSPI2] = {FuriHalBusDomainApb1Grp1, LL_APB1_GRP1_PERIPH_SPI2},
     [FuriHalBusI2C1] = {FuriHalBusDomainApb1Grp1, LL_APB1_GRP1_PERIPH_I2C1},
     [FuriHalBusI2C3] = {FuriHalBusDomainApb3, LL_APB3_GRP1_PERIPH_I2C3},
