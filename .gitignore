@@ -5,3 +5,4 @@
 *.history
 *.pretty
 *.DS_Store
+*.lck
