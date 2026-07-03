@@ -1,7 +1,8 @@
 # DrunkDashboard
 
 ## About
-STM32 based automotive dashboard with sunlight-readable pixel display. This device runs a port of [Flipper Zero OS](https://github.com/flipperdevices/flipperzero-firmware)
+
+An STM32-based automotive dashboard with a sunlight-readable pixel display, running a port of the [Flipper Zero OS](https://github.com/flipperdevices/flipperzero-firmware).
 
 ### Front
 <picture>
