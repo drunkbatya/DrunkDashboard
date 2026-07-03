@@ -6,12 +6,12 @@ An STM32-based automotive dashboard with a sunlight-readable pixel display, runn
 
 ### Front
 <picture>
-    <img alt="" src="/.github/assets/main.png">
+    <img alt="" src="/hardware/production/DrunkDashboard_v2/main.png">
 </picture>
 
 ### Back
 <picture>
-    <img alt="" src="/.github/assets/back.png">
+    <img alt="" src="/hardware/production/DrunkDashboard_v2/back.png">
 </picture>
 
 ### Specs
@@ -20,6 +20,9 @@ An STM32-based automotive dashboard with a sunlight-readable pixel display, runn
 - Canbus
 - 8xADC
 - 8x12v logic level inputs
+
+## Hardware
+Kicad source and production files lives in [hardware](./hardware) directory.
 
 ## Building
 ### Tools

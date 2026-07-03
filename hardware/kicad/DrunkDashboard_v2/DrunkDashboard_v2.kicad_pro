@@ -1296,7 +1296,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "DrunkDashboardZaz_v1.kicad_pro",
+    "filename": "DrunkDashboard_v2.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -1561,8 +1561,8 @@
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "DrunkDashboardZaz_v1.kicad_sch",
-        "name": "DrunkDashboardZaz_v1",
+        "filename": "DrunkDashboard_v2.kicad_sch",
+        "name": "DrunkDashboard_v2",
         "uuid": "174fe566-543e-484a-9b1f-4f415151f49f"
       }
     ],
