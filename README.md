@@ -6,12 +6,12 @@ An STM32-based automotive dashboard with a sunlight-readable pixel display, runn
 
 ### Front
 <picture>
-    <img alt="" src="/hardware/production/DrunkDashboard_v2/main.png">
+    <img alt="" src="/hardware/production/DrunkDashboard_v2/pcb_main_render.png">
 </picture>
 
 ### Back
 <picture>
-    <img alt="" src="/hardware/production/DrunkDashboard_v2/back.png">
+    <img alt="" src="/hardware/production/DrunkDashboard_v2/pcb_back_render.png">
 </picture>
 
 ### Specs
