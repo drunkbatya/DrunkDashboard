@@ -31,6 +31,7 @@ struct STOP_EXTERNING_ME {};
 #include <furi_hal_info.h>
 #include <furi_hal_random.h>
 #include <furi_hal_encoder.h>
+#include <furi_hal_backlight.h>
 #include <furi_hal_target_hw.h>
 
 #ifdef __cplusplus

@@ -1,5 +1,4 @@
 #include "../dashboard_app.h"
-#include "../views/dashboard_view_main.h"
 #include <furi.h>
 
 static void dashboard_scene_canbus_submenu_callback(void* context, uint32_t index);
@@ -18,11 +17,10 @@ static void dashboard_scene_canbus_rebuild_submenu(DashboardApp* app, uint32_t s
     }
 
     for(size_t i = 0; i < app->can_frames_count; i++) {
-        char label[32];
-        snprintf(label, sizeof(label), "0x%03lX", (unsigned long)app->can_frames[i].id);
+        furi_string_printf(app->text, "0x%03lX", (unsigned long)app->can_frames[i].id);
         submenu_add_item(
             app->canbus_submenu,
-            label,
+            furi_string_get_cstr(app->text),
             app->can_frames[i].id,
             dashboard_scene_canbus_submenu_callback,
             app);
@@ -61,8 +59,6 @@ bool dashboard_scene_canbus_on_event(void* context, SceneManagerEvent event) {
     } else if(event.type == SceneManagerEventTypeTick) {
         dashboard_scene_canbus_rebuild_submenu(
             app, submenu_get_selected_item(app->canbus_submenu));
-        consumed = true;
-    } else if(event.type == SceneManagerEventTypeBack) {
         consumed = true;
     }
     return consumed;
