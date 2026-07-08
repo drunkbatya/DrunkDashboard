@@ -38,7 +38,11 @@ static void variable_item_list_draw_callback(Canvas* canvas, void* _model) {
     VariableItemListModel* model = _model;
 
     const uint8_t item_height = 16;
-    const uint8_t item_width = 123;
+    const uint8_t scrollbar_width = 5;
+    const size_t item_width = canvas_width(canvas) - scrollbar_width;
+    const int32_t value_left_x = canvas_width(canvas) > 96 ? canvas_width(canvas) - 55 : 73;
+    const int32_t value_right_x = canvas_width(canvas) - 13;
+    const int32_t value_center_x = (value_left_x + value_right_x) / 2 + 1;
 
     canvas_clear(canvas);
 
@@ -56,6 +60,8 @@ static void variable_item_list_draw_callback(Canvas* canvas, void* _model) {
             const VariableItem* item = VariableItemArray_cref(it);
             uint8_t item_y = y_offset + (item_position * item_height);
             uint8_t item_text_y = item_y + item_height - 4;
+            FuriString* label = furi_string_alloc_set(item->label);
+            elements_string_fit_width(canvas, label, value_left_x - 8);
 
             if(position == model->position) {
                 canvas_set_color(canvas, ColorBlack);
@@ -65,22 +71,23 @@ static void variable_item_list_draw_callback(Canvas* canvas, void* _model) {
                 canvas_set_color(canvas, ColorBlack);
             }
 
-            canvas_draw_str(canvas, 6, item_text_y, item->label);
+            canvas_draw_str(canvas, 6, item_text_y, furi_string_get_cstr(label));
+            furi_string_free(label);
 
             if(item->current_value_index > 0) {
-                canvas_draw_str(canvas, 73, item_text_y, "<");
+                canvas_draw_str(canvas, value_left_x, item_text_y, "<");
             }
 
             canvas_draw_str_aligned(
                 canvas,
-                (115 + 73) / 2 + 1,
+                value_center_x,
                 item_text_y,
                 AlignCenter,
                 AlignBottom,
                 furi_string_get_cstr(item->current_value_text));
 
             if(item->current_value_index < (item->values_count - 1)) {
-                canvas_draw_str(canvas, 115, item_text_y, ">");
+                canvas_draw_str(canvas, value_right_x, item_text_y, ">");
             }
         }
 

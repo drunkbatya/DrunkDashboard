@@ -34,8 +34,6 @@ Canvas* canvas_init(void) {
     canvas_frame_set(
         canvas, 0, 0, u8g2_GetDisplayWidth(&canvas->fb), u8g2_GetDisplayHeight(&canvas->fb));
 
-    furi_hal_pwm_start(FuriHalPwmOutputIdDisplayBacklight, 1000, 100);
-
     // Initialize display
     u8g2_InitDisplay(&canvas->fb);
     // Wake up display
