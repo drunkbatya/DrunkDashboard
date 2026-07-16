@@ -1,5 +1,8 @@
 GIT_COMMIT := $(shell git rev-parse --short HEAD 2>/dev/null || echo unknown)
-GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)
-BUILD_DATE := $(shell date '+%Y-%m-%d' 2>/dev/null || echo unknown)
+GIT_BRANCH := $(shell echo $${WORKFLOW_BRANCH_OR_TAG-$$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo unknown)})
+GIT_BRANCH_NUM := $(shell git rev-list --count HEAD 2>/dev/null || echo 0)
+GIT_ORIGIN := $(shell git config --get remote.origin.url 2>/dev/null || echo local)
+GIT_DIRTY := $(shell git diff --quiet --ignore-submodules HEAD 2>/dev/null; if [ $$? -eq 0 ]; then echo false; else echo true; fi)
+BUILD_DATE := $(shell git show -s --format=%cd --date=format:'%Y-%m-%d %H:%M:%S' HEAD 2>/dev/null || date '+%Y-%m-%d %H:%M:%S' 2>/dev/null || echo unknown)
 BUILD_TIME := $(shell date '+%H:%M:%S' 2>/dev/null || echo unknown)
-
+VERSION := $(shell git describe --tags --always --dirty 2>/dev/null || echo 0.0.0)

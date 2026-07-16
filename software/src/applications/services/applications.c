@@ -2,6 +2,7 @@
 
 int32_t input_srv(void* p);
 int32_t gui_srv(void* p);
+int32_t dialogs_srv(void* p);
 int32_t dashboard_app(void* p);
 
 const DrunkDashboardInternalApplication DRUNK_DASHBOARD_SERVICES[] = {
@@ -17,6 +18,14 @@ const DrunkDashboardInternalApplication DRUNK_DASHBOARD_SERVICES[] = {
         .app = gui_srv,
         .name = "GuiSrv",
         .appid = "gui",
+        .stack_size = 2048,
+        .icon = NULL,
+        .flags = DrunkDashboardInternalApplicationFlagDefault,
+    },
+    {
+        .app = dialogs_srv,
+        .name = "DialogsSrv",
+        .appid = "dialogs",
         .stack_size = 2048,
         .icon = NULL,
         .flags = DrunkDashboardInternalApplicationFlagDefault,

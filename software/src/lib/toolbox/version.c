@@ -9,6 +9,10 @@
 #define GIT_BRANCH "unknown"
 #endif
 
+#ifndef GIT_BRANCH_NUM
+#define GIT_BRANCH_NUM "0"
+#endif
+
 #ifndef BUILD_DATE
 #define BUILD_DATE __DATE__ " " __TIME__
 #endif
@@ -88,7 +92,7 @@ const char* version_get_gitbranch(const Version* v) {
 
 const char* version_get_gitbranchnum(const Version* v) {
     UNUSED(v);
-    return "0";
+    return GIT_BRANCH_NUM;
 }
 
 const char* version_get_builddate(const Version* v) {

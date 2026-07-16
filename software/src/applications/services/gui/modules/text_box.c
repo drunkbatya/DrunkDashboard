@@ -4,9 +4,12 @@
 #include <furi.h>
 #include <stdint.h>
 
-#define TEXT_BOX_TEXT_WIDTH           (120)
-#define TEXT_BOX_TEXT_HEIGHT          (56)
 #define TEXT_BOX_MAX_LINES_PER_SCREEN (10)
+
+#define TEXT_BOX_TEXT_X             (3)
+#define TEXT_BOX_TEXT_Y             (11)
+#define TEXT_BOX_TEXT_WIDTH_OFFSET  (8)
+#define TEXT_BOX_TEXT_HEIGHT_OFFSET (8)
 
 #define TEXT_BOX_LINES_SCROLL_SPEED_MEDIUM     (3)
 #define TEXT_BOX_LINES_SCROLL_SPEED_FAST       (5)
@@ -34,6 +37,14 @@ typedef struct {
 
     bool formatted;
 } TextBoxModel;
+
+static size_t text_box_text_width(Canvas* canvas) {
+    return canvas_width(canvas) - TEXT_BOX_TEXT_WIDTH_OFFSET;
+}
+
+static size_t text_box_text_height(Canvas* canvas) {
+    return canvas_height(canvas) - TEXT_BOX_TEXT_HEIGHT_OFFSET;
+}
 
 static void text_box_process_down(TextBox* text_box, uint8_t lines) {
     with_view_model(
@@ -119,7 +130,7 @@ static void text_box_seek_next_line(Canvas* canvas, TextBoxModel* model) {
             break;
         } else {
             size_t glyph_width = canvas_glyph_width(canvas, symb);
-            if(line_width + glyph_width > TEXT_BOX_TEXT_WIDTH) {
+            if(line_width + glyph_width > text_box_text_width(canvas)) {
                 break;
             }
             line_width += glyph_width;
@@ -218,7 +229,10 @@ static void text_box_prepare_model(Canvas* canvas, TextBoxModel* model) {
     model->scroll_num = 0;
     model->scroll_pos = 0;
     model->line_offset = 0;
-    model->lines_on_screen = TEXT_BOX_TEXT_HEIGHT / canvas_current_font_height(canvas);
+    model->lines_on_screen = text_box_text_height(canvas) / canvas_current_font_height(canvas);
+    if(model->lines_on_screen > TEXT_BOX_MAX_LINES_PER_SCREEN) {
+        model->lines_on_screen = TEXT_BOX_MAX_LINES_PER_SCREEN;
+    }
 
     // Cache text offset to quick final text offset update if TextBoxFocusEnd is set
     int32_t window_offset[TEXT_BOX_MAX_LINES_PER_SCREEN] = {};
@@ -264,13 +278,14 @@ static void text_box_view_draw_callback(Canvas* canvas, void* _model) {
         model->formatted = true;
     }
 
-    elements_slightly_rounded_frame(canvas, 0, 0, 124, 64);
+    elements_slightly_rounded_frame(canvas, 0, 0, canvas_width(canvas) - 4, canvas_height(canvas));
     elements_scrollbar(canvas, model->scroll_pos, model->scroll_num);
 
     if(model->line_offset != model->scroll_pos) {
         text_box_update_text_on_screen(canvas, model);
     }
-    elements_multiline_text(canvas, 3, 11, furi_string_get_cstr(model->text_on_screen));
+    elements_multiline_text(
+        canvas, TEXT_BOX_TEXT_X, TEXT_BOX_TEXT_Y, furi_string_get_cstr(model->text_on_screen));
 }
 
 TextBox* text_box_alloc(void) {

@@ -1,5 +1,6 @@
 TARGET ?= DrunkDashboard
 HW_TARGET ?= d1
+HW_TARGET_ID ?= $(subst d,,$(HW_TARGET))
 DEBUG ?= 1
 OPT ?= -Og
 BUILD_DIR ?= build

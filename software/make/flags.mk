@@ -16,6 +16,17 @@ C_DEFS := \
 	-DLSI_VALUE=32000 \
 	-DVDD_VALUE=3300
 
+C_DEFS += \
+	'-DGIT_COMMIT="$(GIT_COMMIT)"' \
+	'-DGIT_BRANCH="$(GIT_BRANCH)"' \
+	'-DGIT_BRANCH_NUM="$(GIT_BRANCH_NUM)"' \
+	'-DBUILD_DATE="$(BUILD_DATE)"' \
+	'-DVERSION="$(VERSION)"' \
+	'-DBUILD_DIRTY=$(GIT_DIRTY)' \
+	'-DFIRMWARE_ORIGIN="DrunkDashboard"' \
+	'-DGIT_ORIGIN="$(GIT_ORIGIN)"' \
+	-DTARGET=$(HW_TARGET_ID)
+
 ifeq ($(DEBUG),1)
 C_DEFS += -DDEBUG -DFURI_DEBUG -DFURI_HAL_DEBUG
 endif
@@ -55,4 +66,3 @@ LDFLAGS := $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) \
 	-Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref \
 	-Wl,--gc-sections
 LDFLAGS += -Wl,--wrap,_malloc_r -Wl,--wrap,_free_r -Wl,--wrap,_calloc_r -Wl,--wrap,_realloc_r
-

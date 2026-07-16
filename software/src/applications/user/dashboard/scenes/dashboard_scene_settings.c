@@ -4,6 +4,7 @@
 
 typedef enum {
     DashboardSettingsItemLcd,
+    DashboardSettingsItemAbout,
 } DashboardSettingsItem;
 
 static void dashboard_scene_settings_submenu_callback(void* context, uint32_t index) {
@@ -23,6 +24,8 @@ bool dashboard_scene_settings_on_event(void* context, SceneManagerEvent event) {
                 scene_manager_get_scene_state(app->scene_manager, DashboardSceneSettings);
             if(selected == DashboardSettingsItemLcd) {
                 scene_manager_next_scene(app->scene_manager, DashboardSceneSettingsLcd);
+            } else if(selected == DashboardSettingsItemAbout) {
+                scene_manager_next_scene(app->scene_manager, DashboardSceneSettingsAbout);
             }
             consumed = true;
         }
@@ -40,6 +43,12 @@ void dashboard_scene_settings_on_enter(void* context) {
         app->submenu,
         "LCD",
         DashboardSettingsItemLcd,
+        dashboard_scene_settings_submenu_callback,
+        app);
+    submenu_add_item(
+        app->submenu,
+        "About",
+        DashboardSettingsItemAbout,
         dashboard_scene_settings_submenu_callback,
         app);
     submenu_set_selected_item(
