@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-extern FuriHalSpiBus furi_hal_spi_bus_spi2;
+extern FuriHalSpiBus furi_hal_spi_bus_ext;
 
 #ifdef __cplusplus
 }

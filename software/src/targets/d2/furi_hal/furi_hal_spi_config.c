@@ -9,12 +9,12 @@
 #include <stm32u5xx_ll_rcc.h>
 #include <stm32u5xx_ll_spi.h>
 
-static FuriMutex* furi_hal_spi2_mutex = NULL;
+static FuriMutex* furi_hal_spi1_mutex = NULL;
 
-static void furi_hal_spi2_init(void) {
-    LL_RCC_SetSPIClockSource(LL_RCC_SPI2_CLKSOURCE_SYSCLK);
-    furi_hal_bus_enable(FuriHalBusSPI2);
-    furi_hal_bus_enable(FuriHalBusGPIOB);
+static void furi_hal_spi1_init(void) {
+    LL_RCC_SetSPIClockSource(LL_RCC_SPI1_CLKSOURCE_SYSCLK);
+    furi_hal_bus_enable(FuriHalBusSPI1);
+    furi_hal_bus_enable(FuriHalBusGPIOA);
 
     LL_GPIO_InitTypeDef gpio = {0};
     gpio.Pin = gpio_spi_sck.pin | gpio_spi_miso.pin | gpio_spi_mosi.pin;
@@ -36,31 +36,31 @@ static void furi_hal_spi2_init(void) {
     spi.BitOrder = LL_SPI_MSB_FIRST;
     spi.CRCCalculation = LL_SPI_CRCCALCULATION_DISABLE;
     spi.CRCPoly = 0x7;
-    LL_SPI_Init(SPI2, &spi);
-    LL_SPI_SetStandard(SPI2, LL_SPI_PROTOCOL_MOTOROLA);
-    LL_SPI_EnableNSSPulseMgt(SPI2);
+    LL_SPI_Init(SPI1, &spi);
+    LL_SPI_SetStandard(SPI1, LL_SPI_PROTOCOL_MOTOROLA);
+    LL_SPI_EnableNSSPulseMgt(SPI1);
 }
 
-static void furi_hal_spi2_bus_callback(FuriHalSpiBus* bus, FuriHalSpiBusEvent event) {
+static void furi_hal_spi1_bus_callback(FuriHalSpiBus* bus, FuriHalSpiBusEvent event) {
     UNUSED(bus);
 
     switch(event) {
     case FuriHalSpiBusEventInit:
-        furi_hal_spi2_mutex = furi_mutex_alloc(FuriMutexTypeNormal);
-        furi_hal_spi2_init();
-        LL_SPI_Enable(SPI2);
+        furi_hal_spi1_mutex = furi_mutex_alloc(FuriMutexTypeNormal);
+        furi_hal_spi1_init();
+        LL_SPI_Enable(SPI1);
         break;
     case FuriHalSpiBusEventDeinit:
-        LL_SPI_Disable(SPI2);
-        furi_hal_bus_disable(FuriHalBusSPI2);
-        furi_mutex_free(furi_hal_spi2_mutex);
-        furi_hal_spi2_mutex = NULL;
+        LL_SPI_Disable(SPI1);
+        furi_hal_bus_disable(FuriHalBusSPI1);
+        furi_mutex_free(furi_hal_spi1_mutex);
+        furi_hal_spi1_mutex = NULL;
         break;
     case FuriHalSpiBusEventLock:
-        furi_check(furi_mutex_acquire(furi_hal_spi2_mutex, FuriWaitForever) == FuriStatusOk);
+        furi_check(furi_mutex_acquire(furi_hal_spi1_mutex, FuriWaitForever) == FuriStatusOk);
         break;
     case FuriHalSpiBusEventUnlock:
-        furi_check(furi_mutex_release(furi_hal_spi2_mutex) == FuriStatusOk);
+        furi_check(furi_mutex_release(furi_hal_spi1_mutex) == FuriStatusOk);
         break;
     case FuriHalSpiBusEventActivate:
     case FuriHalSpiBusEventDeactivate:
@@ -69,8 +69,8 @@ static void furi_hal_spi2_bus_callback(FuriHalSpiBus* bus, FuriHalSpiBusEvent ev
 }
 
 FuriHalSpiBus furi_hal_spi_bus_ext = {
-    .spi = SPI2,
-    .callback = furi_hal_spi2_bus_callback,
+    .spi = SPI1,
+    .callback = furi_hal_spi1_bus_callback,
     .current_handle = NULL,
 };
 

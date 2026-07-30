@@ -20,6 +20,9 @@ typedef enum {
     FuriHalInterruptIdTIM3,
     FuriHalInterruptIdTIM5,
 
+    // TIM8
+    FuriHalInterruptIdTim8Cc,
+
     // DMA1
     FuriHalInterruptIdDma1Ch1,
     FuriHalInterruptIdDma1Ch2,

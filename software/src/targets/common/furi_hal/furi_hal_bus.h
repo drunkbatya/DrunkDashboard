@@ -47,6 +47,7 @@ typedef enum {
 
     FuriHalBusAPB2_GRP1,
     FuriHalBusTIM1,
+    FuriHalBusTIM8,
     FuriHalBusSPI1,
     FuriHalBusUSART1,
     FuriHalBusTIM16,

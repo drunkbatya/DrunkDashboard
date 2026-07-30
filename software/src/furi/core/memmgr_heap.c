@@ -41,7 +41,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stm32u5xx.h>
-#include <stm32wb55_linker.h>
+#include <linker.h>
 #include <core/log.h>
 #include <core/common_defines.h>
 

@@ -1,15 +1,16 @@
 #include <furi_hal_version.h>
+#include <furi_hal_target_hw.h>
 
 bool furi_hal_version_do_i_belong_here(void) {
-    return (furi_hal_version_get_hw_target() == 7) || (furi_hal_version_get_hw_target() == 0);
+    return furi_hal_version_get_hw_target() == TARGET;
 }
 
 const char* furi_hal_version_get_model_name(void) {
-    return "DrunkDashboard";
+    return FURI_HAL_TARGET_MODEL_NAME;
 }
 
 const char* furi_hal_version_get_model_code(void) {
-    return "DD.1";
+    return FURI_HAL_TARGET_MODEL_CODE;
 }
 
 const char* furi_hal_version_get_fcc_id(void) {

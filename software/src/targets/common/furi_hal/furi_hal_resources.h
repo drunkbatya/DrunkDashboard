@@ -66,14 +66,15 @@ extern const GpioPin gpio_encoder_1_b;
 extern const GpioPin gpio_encoder_2_a;
 extern const GpioPin gpio_encoder_2_b;
 
-extern const GpioPin gpio_spi2_sck;
-extern const GpioPin gpio_spi2_miso;
-extern const GpioPin gpio_spi2_mosi;
-
-extern const GpioPin gpio_adc1_in7;
+extern const GpioPin gpio_spi_sck;
+extern const GpioPin gpio_spi_miso;
+extern const GpioPin gpio_spi_mosi;
 
 extern const GpioPin gpio_usart_tx;
 extern const GpioPin gpio_usart_rx;
+
+extern const GpioPin gpio_fdcan1_rx;
+extern const GpioPin gpio_fdcan1_tx;
 
 extern const GpioPin gpio_i2c1_scl;
 extern const GpioPin gpio_i2c1_sda;

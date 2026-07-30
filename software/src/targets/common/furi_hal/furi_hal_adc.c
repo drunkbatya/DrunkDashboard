@@ -1,4 +1,6 @@
 #include <furi_hal_adc.h>
+#include <furi_hal_gpio.h>
+#include <furi_hal_resources.h>
 #include <furi.h>
 
 #include <stm32u5xx_ll_adc.h>
@@ -21,19 +23,29 @@ typedef struct {
 static FuriHalAdcHandle furi_hal_adc_handle = {0};
 
 static const FuriHalAdcChannelMap furi_hal_adc_channel_map[] = {
+    [FuriHalAdcChannel1] = {ADC1, LL_ADC_CHANNEL_1},
+    [FuriHalAdcChannel2] = {ADC1, LL_ADC_CHANNEL_2},
+    [FuriHalAdcChannel3] = {ADC1, LL_ADC_CHANNEL_3},
+    [FuriHalAdcChannel4] = {ADC1, LL_ADC_CHANNEL_4},
+    [FuriHalAdcChannel5] = {ADC1, LL_ADC_CHANNEL_5},
+    [FuriHalAdcChannel6] = {ADC1, LL_ADC_CHANNEL_6},
     [FuriHalAdcChannel7] = {ADC1, LL_ADC_CHANNEL_7},
+    [FuriHalAdcChannel8] = {ADC1, LL_ADC_CHANNEL_8},
+    [FuriHalAdcChannel9] = {ADC1, LL_ADC_CHANNEL_9},
 };
+
+static void furi_hal_adc_gpio_init(void) {
+    for(size_t i = 0; i < gpio_pins_count; i++) {
+        if(gpio_pins[i].channel == FuriHalAdcChannelNone) continue;
+        furi_hal_gpio_init(gpio_pins[i].pin, GpioModeAnalog, GpioPullNo, GpioSpeedLow);
+    }
+}
 
 static void furi_hal_adc1_init(void) {
     LL_RCC_SetADCDACClockSource(LL_RCC_ADCDAC_CLKSOURCE_HSE);
     LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_ADC12);
-    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
 
-    LL_GPIO_InitTypeDef gpio = {0};
-    gpio.Pin = LL_GPIO_PIN_2;
-    gpio.Mode = LL_GPIO_MODE_ANALOG;
-    gpio.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(GPIOA, &gpio);
+    furi_hal_adc_gpio_init();
 
     LL_ADC_SetTriggerFrequencyMode(ADC1, LL_ADC_TRIGGER_FREQ_HIGH);
 

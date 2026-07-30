@@ -3,20 +3,16 @@
 #include <furi.h>
 #include <furi_hal_bus.h>
 #include <furi_hal_gpio.h>
+#include <furi_hal_resources.h>
 
 #include <stm32u5xx_ll_fdcan.h>
 #include <stm32u5xx_ll_rcc.h>
 
 #define TAG "FuriHalFdcan"
 
-static const GpioPin gpio_fdcan1_rx = {.port = GPIOA, .pin = LL_GPIO_PIN_11};
-static const GpioPin gpio_fdcan1_tx = {.port = GPIOA, .pin = LL_GPIO_PIN_12};
-
 static LL_FDCAN_MessageRAMTypeDef furi_hal_fdcan1_message_ram;
 
 static void furi_hal_fdcan_gpio_init(void) {
-    furi_hal_bus_enable(FuriHalBusGPIOA);
-
     furi_hal_gpio_init_ex(
         &gpio_fdcan1_rx, GpioModeAltFunctionPushPull, GpioPullNo, GpioSpeedLow, GpioAltFn9FDCAN1);
     furi_hal_gpio_init_ex(

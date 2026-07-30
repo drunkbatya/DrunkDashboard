@@ -51,3 +51,7 @@ debug: flash
 clean:
 	-rm -fR $(BUILD_DIR)
 
+.PHONY: clean-all
+clean-all:
+	-rm -fR $(BUILD_ROOT)
+

@@ -31,14 +31,17 @@ const GpioPin gpio_encoder_1_b = {.port = GPIOA, .pin = LL_GPIO_PIN_1};
 const GpioPin gpio_encoder_2_a = {.port = GPIOA, .pin = LL_GPIO_PIN_6};
 const GpioPin gpio_encoder_2_b = {.port = GPIOA, .pin = LL_GPIO_PIN_7};
 
-const GpioPin gpio_spi2_sck = {.port = GPIOB, .pin = LL_GPIO_PIN_10};
-const GpioPin gpio_spi2_miso = {.port = GPIOB, .pin = LL_GPIO_PIN_14};
-const GpioPin gpio_spi2_mosi = {.port = GPIOB, .pin = LL_GPIO_PIN_15};
+const GpioPin gpio_spi_sck = {.port = GPIOB, .pin = LL_GPIO_PIN_10};
+const GpioPin gpio_spi_miso = {.port = GPIOB, .pin = LL_GPIO_PIN_14};
+const GpioPin gpio_spi_mosi = {.port = GPIOB, .pin = LL_GPIO_PIN_15};
 
-const GpioPin gpio_adc1_in7 = {.port = GPIOA, .pin = LL_GPIO_PIN_2};
+static const GpioPin gpio_adc1_in7 = {.port = GPIOA, .pin = LL_GPIO_PIN_2};
 
 const GpioPin gpio_usart_tx = {.port = GPIOA, .pin = LL_GPIO_PIN_9};
 const GpioPin gpio_usart_rx = {.port = GPIOA, .pin = LL_GPIO_PIN_10};
+
+const GpioPin gpio_fdcan1_rx = {.port = GPIOA, .pin = LL_GPIO_PIN_11};
+const GpioPin gpio_fdcan1_tx = {.port = GPIOA, .pin = LL_GPIO_PIN_12};
 
 const GpioPin gpio_i2c1_scl = {.port = GPIOB, .pin = LL_GPIO_PIN_8};
 const GpioPin gpio_i2c1_sda = {.port = GPIOB, .pin = LL_GPIO_PIN_9};

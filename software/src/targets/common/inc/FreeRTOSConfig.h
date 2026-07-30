@@ -11,7 +11,7 @@
 #endif /* CMSIS_device_header */
 
 #include CMSIS_device_header
-#include <stm32wb55_linker.h>
+#include <linker.h>
 
 #define configENABLE_FPU               1
 #define configENABLE_MPU               0

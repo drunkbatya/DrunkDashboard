@@ -90,10 +90,14 @@ typedef enum {
 
     GpioAltFn2TIM2 = 2, /*!< TIM2 Alternate Function mapping */
     GpioAltFn2TIM1 = 2, /*!< TIM1 Alternate Function mapping */
+    GpioAltFn2TIM3 = 2, /*!< TIM3 Alternate Function mapping */
+    GpioAltFn2TIM5 = 2, /*!< TIM5 Alternate Function mapping */
+    GpioAltFn2LPTIM2 = 2, /*!< LPTIM2 Alternate Function mapping */
 
     GpioAltFn3SAI1 = 3, /*!< SAI1_CK1 Alternate Function mapping */
     GpioAltFn3SPI2 = 3, /*!< SPI2 Alternate Function mapping */
     GpioAltFn3TIM1 = 3, /*!< TIM1 Alternate Function mapping */
+    GpioAltFn3TIM8 = 3, /*!< TIM8 Alternate Function mapping */
 
     GpioAltFn4I2C1 = 4, /*!< I2C1 Alternate Function mapping */
     GpioAltFn4I2C3 = 4, /*!< I2C3 Alternate Function mapping */

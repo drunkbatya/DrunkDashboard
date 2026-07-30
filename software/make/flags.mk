@@ -35,8 +35,7 @@ C_INCLUDES := \
 	-Isrc/lib/cmsis_wrappers/Include \
 	-I$(ASSETS_BUILD_DIR) \
 	-Isrc/targets/furi_hal_include \
-	-Isrc/targets/$(HW_TARGET)/inc \
-	-Isrc/targets/$(HW_TARGET)/furi_hal \
+	$(foreach layer,$(TARGET_LAYERS),-I$(layer)/inc -I$(layer)/furi_hal) \
 	-Isrc/furi \
 	-Isrc/ll_wrappers \
 	-Isrc/lib/FreeRTOS-glue \

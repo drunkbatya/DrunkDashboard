@@ -1,22 +1,13 @@
 #include <furi_hal_version.h>
+#include <furi_hal_target_hw.h>
 #include <furi.h>
 #include <stm32u5xx.h>
 
-#define AD_TYPE_COMPLETE_LOCAL_NAME 0x09U
+#define AD_TYPE_COMPLETE_LOCAL_NAME "\x09"
 
-static char furi_hal_version_name[FURI_HAL_VERSION_ARRAY_NAME_LENGTH] = "DDZ";
-static char furi_hal_version_device_name[FURI_HAL_VERSION_DEVICE_NAME_LENGTH] = {
-    AD_TYPE_COMPLETE_LOCAL_NAME,
-    'D',
-    'r',
-    'u',
-    'n',
-    'k',
-    'D',
-    'D',
-    'Z',
-    0,
-};
+static char furi_hal_version_name[FURI_HAL_VERSION_ARRAY_NAME_LENGTH] = FURI_HAL_TARGET_NAME;
+static char furi_hal_version_device_name[FURI_HAL_VERSION_DEVICE_NAME_LENGTH] =
+    AD_TYPE_COMPLETE_LOCAL_NAME "Drunk" FURI_HAL_TARGET_NAME;
 static uint8_t furi_hal_version_ble_mac[6] = {0};
 
 void furi_hal_version_init(void) {
@@ -38,7 +29,7 @@ uint8_t furi_hal_version_get_hw_version(void) {
 }
 
 uint8_t furi_hal_version_get_hw_target(void) {
-    return 0;
+    return TARGET;
 }
 
 uint8_t furi_hal_version_get_hw_body(void) {
