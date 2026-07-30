@@ -9,11 +9,12 @@
 #include <stm32u5xx_ll_gpio.h>
 #include <stm32u5xx_ll_tim.h>
 
-#define FURI_HAL_ENCODER_TIMER_COUNTS_PER_STEP 2
-#define FURI_HAL_ENCODER_GPIO_COUNTS_PER_STEP  4
+#define FURI_HAL_ENCODER_TIMER_COUNTS_PER_STEP 1
+#define FURI_HAL_ENCODER_GPIO_COUNTS_PER_STEP  2
 
 typedef struct {
     const uint8_t counts_per_step;
+    const bool inverted;
     volatile int32_t accumulator;
     volatile int32_t steps;
 } FuriHalEncoderCounter;
@@ -56,7 +57,7 @@ static FuriHalEncoderState furi_hal_encoder = {
         },
     .horizontal =
         {
-            .counter = {.counts_per_step = FURI_HAL_ENCODER_GPIO_COUNTS_PER_STEP},
+            .counter = {.counts_per_step = FURI_HAL_ENCODER_GPIO_COUNTS_PER_STEP, .inverted = true},
             .pin_a = &gpio_encoder_2_a,
             .pin_b = &gpio_encoder_2_b,
         },
@@ -68,7 +69,7 @@ static const int8_t furi_hal_encoder_quadrature_lut[16] =
 static void furi_hal_encoder_apply_delta(FuriHalEncoderCounter* counter, int32_t delta) {
     const int32_t previous_steps = counter->steps;
 
-    counter->accumulator += delta;
+    counter->accumulator += counter->inverted ? -delta : delta;
 
     while(counter->accumulator >= counter->counts_per_step) {
         counter->steps++;
