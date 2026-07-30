@@ -9,7 +9,7 @@
 #include <stm32u5xx_ll_gpio.h>
 #include <stm32u5xx_ll_tim.h>
 
-#define FURI_HAL_ENCODER_TIMER_COUNTS_PER_STEP 1
+#define FURI_HAL_ENCODER_TIMER_COUNTS_PER_STEP 2
 #define FURI_HAL_ENCODER_GPIO_COUNTS_PER_STEP  2
 
 typedef struct {
@@ -142,7 +142,7 @@ static void furi_hal_encoder_timer_init(FuriHalEncoderTimer* encoder) {
     LL_TIM_Init(timer, &tim);
     LL_TIM_DisableARRPreload(timer);
 
-    LL_TIM_SetEncoderMode(timer, LL_TIM_ENCODERMODE_X2_TI1);
+    LL_TIM_SetEncoderMode(timer, LL_TIM_ENCODERMODE_X4_TI12);
     LL_TIM_IC_SetActiveInput(timer, LL_TIM_CHANNEL_CH1, LL_TIM_ACTIVEINPUT_DIRECTTI);
     LL_TIM_IC_SetPrescaler(timer, LL_TIM_CHANNEL_CH1, LL_TIM_ICPSC_DIV1);
     LL_TIM_IC_SetFilter(timer, LL_TIM_CHANNEL_CH1, LL_TIM_IC_FILTER_FDIV1);
