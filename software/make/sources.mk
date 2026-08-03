@@ -6,6 +6,7 @@ C_SOURCES := \
 	src/lib/stm32u5xx-hal-driver/Src/stm32u5xx_ll_exti.c \
 	src/lib/stm32u5xx-hal-driver/Src/stm32u5xx_ll_gpio.c \
 	src/lib/stm32u5xx-hal-driver/Src/stm32u5xx_ll_i2c.c \
+	src/lib/stm32u5xx-hal-driver/Src/stm32u5xx_ll_lptim.c \
 	src/lib/stm32u5xx-hal-driver/Src/stm32u5xx_ll_pwr.c \
 	src/lib/stm32u5xx-hal-driver/Src/stm32u5xx_ll_rcc.c \
 	src/lib/stm32u5xx-hal-driver/Src/stm32u5xx_ll_rtc.c \
