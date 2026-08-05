@@ -26,9 +26,12 @@ typedef struct {
     DashboardViewMenu* view_menu;
     DashboardViewCanbus* view_canbus;
     DashboardCanWorker* can_worker;
-    DashboardCanFrame* can_frames;
+    const EcuDecoder* ecu_decoder;
+    DashboardCanFrame* can_monitor_frames;
+    EcuCanFrames* ecu_can_frames;
+    EcuState* ecu_state;
     FuriString* text;
-    size_t can_frames_count;
+    size_t can_monitor_frames_count;
     uint32_t selected_can_id;
     DashboardSettings* settings;
 } DashboardApp;

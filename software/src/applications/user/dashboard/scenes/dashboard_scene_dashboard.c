@@ -1,4 +1,5 @@
 #include "../dashboard_app.h"
+#include "../decoders/ecu_decoder.h"
 #include "../views/dashboard_view_dashboard.h"
 #include <furi.h>
 
@@ -17,7 +18,15 @@ bool dashboard_scene_dashboard_on_event(void* context, SceneManagerEvent event) 
             consumed = true;
         }
     } else if(event.type == SceneManagerEventTypeTick) {
-        dashboard_view_dashboard_update(app->view_dashboard);
+        const EcuDecoder* decoder = app->ecu_decoder;
+        dashboard_can_worker_get_frames(
+            app->can_worker,
+            decoder->frame_ids,
+            app->ecu_can_frames->frames,
+            app->ecu_can_frames->found,
+            decoder->frame_count);
+        decoder->decode(app->ecu_can_frames, app->ecu_state);
+        dashboard_view_dashboard_update(app->view_dashboard, app->ecu_state);
         consumed = true;
     } else if(event.type == SceneManagerEventTypeBack) {
         consumed = true;

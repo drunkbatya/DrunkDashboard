@@ -4,24 +4,24 @@
 static void dashboard_scene_canbus_submenu_callback(void* context, uint32_t index);
 
 static void dashboard_scene_canbus_rebuild_submenu(DashboardApp* app, uint32_t selected_id) {
-    app->can_frames_count = dashboard_can_worker_copy_snapshot(
-        app->can_worker, app->can_frames, DASHBOARD_CAN_MAX_IDS);
+    app->can_monitor_frames_count = dashboard_can_worker_copy_snapshot(
+        app->can_worker, app->can_monitor_frames, DASHBOARD_CAN_MAX_IDS);
 
     submenu_reset(app->canbus_submenu);
     submenu_set_header(app->canbus_submenu, "CAN messages");
 
-    if(app->can_frames_count == 0) {
+    if(app->can_monitor_frames_count == 0) {
         submenu_add_item(app->canbus_submenu, "No messages", 0, NULL, app);
         submenu_set_selected_item(app->canbus_submenu, 0);
         return;
     }
 
-    for(size_t i = 0; i < app->can_frames_count; i++) {
-        furi_string_printf(app->text, "0x%03lX", (unsigned long)app->can_frames[i].id);
+    for(size_t i = 0; i < app->can_monitor_frames_count; i++) {
+        furi_string_printf(app->text, "0x%03lX", (unsigned long)app->can_monitor_frames[i].id);
         submenu_add_item(
             app->canbus_submenu,
             furi_string_get_cstr(app->text),
-            app->can_frames[i].id,
+            app->can_monitor_frames[i].id,
             dashboard_scene_canbus_submenu_callback,
             app);
     }

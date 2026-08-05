@@ -36,7 +36,7 @@ static void dashboard_view_canbus_draw_callback(Canvas* canvas, void* _model) {
         str,
         sizeof(str),
         "Count: %lu  Len: %lu",
-        (unsigned long)model->frame.count,
+        (unsigned long)model->frame.rx_count,
         (unsigned long)model->frame.last_len);
     canvas_draw_str(canvas, 0, 24, str);
 

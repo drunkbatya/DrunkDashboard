@@ -1,4 +1,5 @@
 #include "dashboard_app.h"
+#include "decoders/rusefi_can_decoder.h"
 
 #include <stdlib.h>
 #include <core/record.h>
@@ -32,7 +33,10 @@ static DashboardApp* dashboard_app_alloc() {
     app->settings = dashboard_settings_alloc();
 
     app->can_worker = dashboard_can_worker_alloc();
-    app->can_frames = malloc(sizeof(DashboardCanFrame) * DASHBOARD_CAN_MAX_IDS);
+    app->ecu_decoder = &rusefi_can_decoder;
+    app->can_monitor_frames = malloc(sizeof(DashboardCanFrame) * DASHBOARD_CAN_MAX_IDS);
+    app->ecu_can_frames = malloc(sizeof(EcuCanFrames));
+    app->ecu_state = malloc(sizeof(EcuState));
     app->text = furi_string_alloc();
     dashboard_can_worker_start(app->can_worker);
 
@@ -112,7 +116,9 @@ void dashboard_app_free(DashboardApp* app) {
     dashboard_can_worker_free(app->can_worker);
     dashboard_settings_free(app->settings);
     furi_string_free(app->text);
-    free(app->can_frames);
+    free(app->can_monitor_frames);
+    free(app->ecu_can_frames);
+    free(app->ecu_state);
 
     furi_record_close(RECORD_GUI);
     free(app);

@@ -45,7 +45,7 @@ static bool dashboard_can_worker_update_insert_message(
         data_updated = true;
     }
 
-    msg->count++;
+    msg->rx_count++;
     if((msg->last_len != message->data_size) ||
        (memcmp(msg->last_data, message->data, message->data_size) != 0)) {
         memcpy(msg->last_data, message->data, message->data_size);
@@ -189,23 +189,23 @@ size_t dashboard_can_worker_copy_snapshot(
 
     dashboard_can_worker_lock(worker);
 
-    size_t count = 0;
+    size_t written = 0;
     can_msgs_dict_it_t it;
     for(can_msgs_dict_it(it, worker->can_messages); !can_msgs_dict_end_p(it);
         can_msgs_dict_next(it)) {
-        if(count >= frames_count) break;
+        if(written >= frames_count) break;
 
         const can_msgs_dict_itref_t* item = can_msgs_dict_cref(it);
-        frames[count].id = item->key;
-        frames[count].count = item->value.count;
-        frames[count].last_len = item->value.last_len;
-        memcpy(frames[count].last_data, item->value.last_data, item->value.last_len);
-        count++;
+        frames[written].id = item->key;
+        frames[written].rx_count = item->value.rx_count;
+        frames[written].last_len = item->value.last_len;
+        memcpy(frames[written].last_data, item->value.last_data, item->value.last_len);
+        written++;
     }
 
     dashboard_can_worker_unlock(worker);
 
-    for(size_t i = 1; i < count; i++) {
+    for(size_t i = 1; i < written; i++) {
         DashboardCanFrame frame = frames[i];
         size_t j = i;
         while((j > 0) && (frames[j - 1].id > frame.id)) {
@@ -215,7 +215,7 @@ size_t dashboard_can_worker_copy_snapshot(
         frames[j] = frame;
     }
 
-    return count;
+    return written;
 }
 
 bool dashboard_can_worker_get_frame(
@@ -231,7 +231,7 @@ bool dashboard_can_worker_get_frame(
     CanMsg* msg = can_msgs_dict_get(worker->can_messages, id);
     if(msg) {
         frame->id = id;
-        frame->count = msg->count;
+        frame->rx_count = msg->rx_count;
         frame->last_len = msg->last_len;
         memcpy(frame->last_data, msg->last_data, msg->last_len);
         found = true;
@@ -239,4 +239,31 @@ bool dashboard_can_worker_get_frame(
 
     dashboard_can_worker_unlock(worker);
     return found;
+}
+
+void dashboard_can_worker_get_frames(
+    DashboardCanWorker* worker,
+    const uint32_t* ids,
+    DashboardCanFrame* frames,
+    bool* found,
+    size_t count) {
+    furi_check(worker);
+    furi_check(ids);
+    furi_check(frames);
+    furi_check(found);
+
+    dashboard_can_worker_lock(worker);
+    for(size_t i = 0; i < count; i++) {
+        CanMsg* msg = can_msgs_dict_get(worker->can_messages, ids[i]);
+        if(msg) {
+            frames[i].id = ids[i];
+            frames[i].rx_count = msg->rx_count;
+            frames[i].last_len = msg->last_len;
+            memcpy(frames[i].last_data, msg->last_data, msg->last_len);
+            found[i] = true;
+        } else {
+            found[i] = false;
+        }
+    }
+    dashboard_can_worker_unlock(worker);
 }

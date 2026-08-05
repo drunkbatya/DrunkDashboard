@@ -16,7 +16,7 @@ typedef enum {
 #define CAN_RX_QUEUE_SIZE 32
 
 typedef struct {
-    uint32_t count;
+    uint32_t rx_count;
     uint32_t last_len;
     uint8_t last_data[FURI_HAL_FDCAN_MAX_FRAME_SIZE];
 } CanMsg;

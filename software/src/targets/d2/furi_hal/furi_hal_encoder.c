@@ -1,7 +1,6 @@
 #include <furi_hal_encoder.h>
 #include <furi_hal_bus.h>
 #include <furi_hal_gpio.h>
-#include <furi_hal_interrupt.h>
 #include <furi_hal_resources.h>
 
 #include <furi.h>
@@ -13,7 +12,7 @@
 #include <stm32u5xx_ll_tim.h>
 
 #define FURI_HAL_ENCODER_TIM_COUNTS_PER_STEP   2
-#define FURI_HAL_ENCODER_LPTIM_COUNTS_PER_STEP 1
+#define FURI_HAL_ENCODER_LPTIM_COUNTS_PER_STEP 2
 
 typedef struct {
     const uint8_t counts_per_step;
@@ -24,19 +23,27 @@ typedef struct {
 } FuriHalEncoderCounter;
 
 typedef struct {
+    const GpioPin* const gpio;
+    const uint32_t alt_fn;
+    const uint32_t exti_port;
+    const uint32_t exti_source_line;
+    const uint32_t exti_line;
+} FuriHalEncoderPin;
+
+typedef struct {
     FuriHalEncoderCounter counter;
     TIM_TypeDef* const timer;
     const FuriHalBus bus;
-    const FuriHalInterruptId interrupt;
-    const GpioPin* const pin_a;
-    const GpioPin* const pin_b;
-    const uint32_t alt_fn;
+    const FuriHalEncoderPin pin_a;
+    const FuriHalEncoderPin pin_b;
 } FuriHalEncoderTim;
 
 typedef struct {
     FuriHalEncoderCounter counter;
     LPTIM_TypeDef* const lptim;
     const FuriHalBus bus;
+    const FuriHalEncoderPin pin_a;
+    const FuriHalEncoderPin pin_b;
 } FuriHalEncoderLpTim;
 
 typedef struct {
@@ -49,20 +56,48 @@ typedef struct {
 static FuriHalEncoderState furi_hal_encoder = {
     .vertical =
         {
-            .counter = {.counts_per_step = FURI_HAL_ENCODER_TIM_COUNTS_PER_STEP},
+            .counter = {.counts_per_step = FURI_HAL_ENCODER_TIM_COUNTS_PER_STEP, .inverted = false},
             .timer = TIM8,
             .bus = FuriHalBusTIM8,
-            .interrupt = FuriHalInterruptIdTim8Cc,
-            .pin_a = &gpio_encoder_1_a,
-            .pin_b = &gpio_encoder_1_b,
-            .alt_fn = LL_GPIO_AF_3,
+            .pin_a =
+                {
+                    .gpio = &gpio_encoder_1_a,
+                    .alt_fn = LL_GPIO_AF_3,
+                    .exti_port = LL_EXTI_EXTI_PORTC,
+                    .exti_source_line = LL_EXTI_EXTI_LINE6,
+                    .exti_line = LL_EXTI_LINE_6,
+                },
+            .pin_b =
+                {
+                    .gpio = &gpio_encoder_1_b,
+                    .alt_fn = LL_GPIO_AF_3,
+                    .exti_port = LL_EXTI_EXTI_PORTC,
+                    .exti_source_line = LL_EXTI_EXTI_LINE7,
+                    .exti_line = LL_EXTI_LINE_7,
+                },
         },
     .horizontal =
         {
             .counter =
-                {.counts_per_step = FURI_HAL_ENCODER_LPTIM_COUNTS_PER_STEP, .inverted = true},
+                {.counts_per_step = FURI_HAL_ENCODER_LPTIM_COUNTS_PER_STEP, .inverted = false},
             .lptim = LPTIM2,
             .bus = FuriHalBusLPTIM2,
+            .pin_a =
+                {
+                    .gpio = &gpio_encoder_2_a,
+                    .alt_fn = LL_GPIO_AF_14,
+                    .exti_port = LL_EXTI_EXTI_PORTB,
+                    .exti_source_line = LL_EXTI_EXTI_LINE1,
+                    .exti_line = LL_EXTI_LINE_1,
+                },
+            .pin_b =
+                {
+                    .gpio = &gpio_encoder_2_b,
+                    .alt_fn = LL_GPIO_AF_2,
+                    .exti_port = LL_EXTI_EXTI_PORTD,
+                    .exti_source_line = LL_EXTI_EXTI_LINE9,
+                    .exti_line = LL_EXTI_LINE_9,
+                },
         },
 };
 
@@ -93,46 +128,39 @@ static void furi_hal_encoder_apply_counter(FuriHalEncoderCounter* counter, uint3
     }
 }
 
+static void furi_hal_encoder_pin_init(
+    const FuriHalEncoderPin* pin,
+    GpioExtiCallback callback,
+    void* context) {
+    LL_GPIO_InitTypeDef init = {0};
+    init.Pin = pin->gpio->pin;
+    init.Mode = LL_GPIO_MODE_ALTERNATE;
+    init.Speed = LL_GPIO_SPEED_FREQ_LOW;
+    init.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    init.Pull = LL_GPIO_PULL_NO;
+    init.Alternate = pin->alt_fn;
+    LL_GPIO_Init(pin->gpio->port, &init);
+
+    LL_EXTI_SetEXTISource(pin->exti_port, pin->exti_source_line);
+    LL_EXTI_EnableRisingTrig_0_31(pin->exti_line);
+    LL_EXTI_EnableFallingTrig_0_31(pin->exti_line);
+
+    furi_hal_gpio_add_int_callback(pin->gpio, callback, context);
+
+    const IRQn_Type irqn = (IRQn_Type)(EXTI0_IRQn + __builtin_ctz(pin->gpio->pin));
+    NVIC_SetPriority(irqn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 5, 0));
+    NVIC_EnableIRQ(irqn);
+}
+
 static void furi_hal_encoder_tim_isr(void* context) {
     FuriHalEncoderTim* encoder = context;
-    TIM_TypeDef* timer = encoder->timer;
-
-    const bool active = LL_TIM_IsActiveFlag_CC1(timer) || LL_TIM_IsActiveFlag_CC2(timer) ||
-                        LL_TIM_IsActiveFlag_CC1OVR(timer) || LL_TIM_IsActiveFlag_CC2OVR(timer);
-
-    if(LL_TIM_IsActiveFlag_CC1(timer)) {
-        LL_TIM_ClearFlag_CC1(timer);
-    }
-    if(LL_TIM_IsActiveFlag_CC2(timer)) {
-        LL_TIM_ClearFlag_CC2(timer);
-    }
-    if(LL_TIM_IsActiveFlag_CC1OVR(timer)) {
-        LL_TIM_ClearFlag_CC1OVR(timer);
-    }
-    if(LL_TIM_IsActiveFlag_CC2OVR(timer)) {
-        LL_TIM_ClearFlag_CC2OVR(timer);
-    }
-
-    if(!active) {
-        return;
-    }
-
-    furi_hal_encoder_apply_counter(&encoder->counter, LL_TIM_GetCounter(timer));
+    furi_hal_encoder_apply_counter(&encoder->counter, LL_TIM_GetCounter(encoder->timer));
 }
 
 static void furi_hal_encoder_tim_init(FuriHalEncoderTim* encoder) {
     TIM_TypeDef* timer = encoder->timer;
 
     furi_hal_bus_enable(encoder->bus);
-
-    LL_GPIO_InitTypeDef gpio = {0};
-    gpio.Pin = encoder->pin_a->pin | encoder->pin_b->pin;
-    gpio.Mode = LL_GPIO_MODE_ALTERNATE;
-    gpio.Speed = LL_GPIO_SPEED_FREQ_LOW;
-    gpio.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-    gpio.Pull = LL_GPIO_PULL_NO;
-    gpio.Alternate = encoder->alt_fn;
-    LL_GPIO_Init(encoder->pin_a->port, &gpio);
 
     LL_TIM_InitTypeDef tim = {0};
     tim.Prescaler = 0;
@@ -156,19 +184,14 @@ static void furi_hal_encoder_tim_init(FuriHalEncoderTim* encoder) {
     LL_TIM_CC_EnableChannel(timer, LL_TIM_CHANNEL_CH1 | LL_TIM_CHANNEL_CH2);
 
     LL_TIM_SetCounter(timer, 0);
-    encoder->counter.last_counter = 0;
+    LL_TIM_EnableCounter(timer);
+
+    encoder->counter.last_counter = LL_TIM_GetCounter(timer);
     encoder->counter.accumulator = 0;
     encoder->counter.steps = 0;
 
-    LL_TIM_ClearFlag_CC1(timer);
-    LL_TIM_ClearFlag_CC2(timer);
-    LL_TIM_ClearFlag_CC1OVR(timer);
-    LL_TIM_ClearFlag_CC2OVR(timer);
-    LL_TIM_EnableIT_CC1(timer);
-    LL_TIM_EnableIT_CC2(timer);
-    LL_TIM_EnableCounter(timer);
-
-    furi_hal_interrupt_set_isr(encoder->interrupt, furi_hal_encoder_tim_isr, encoder);
+    furi_hal_encoder_pin_init(&encoder->pin_a, furi_hal_encoder_tim_isr, encoder);
+    furi_hal_encoder_pin_init(&encoder->pin_b, furi_hal_encoder_tim_isr, encoder);
 }
 
 static uint32_t furi_hal_encoder_lptim_counter(LPTIM_TypeDef* lptim) {
@@ -187,33 +210,6 @@ static void furi_hal_encoder_lptim_isr(void* context) {
     FuriHalEncoderLpTim* encoder = context;
     furi_hal_encoder_apply_counter(
         &encoder->counter, furi_hal_encoder_lptim_counter(encoder->lptim));
-}
-
-static void furi_hal_encoder_lptim_pin_init(
-    const GpioPin* gpio,
-    uint32_t alt_fn,
-    uint32_t exti_port,
-    uint32_t exti_source_line,
-    uint32_t exti_line,
-    FuriHalEncoderLpTim* encoder) {
-    LL_GPIO_InitTypeDef init = {0};
-    init.Pin = gpio->pin;
-    init.Mode = LL_GPIO_MODE_ALTERNATE;
-    init.Speed = LL_GPIO_SPEED_FREQ_LOW;
-    init.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-    init.Pull = LL_GPIO_PULL_NO;
-    init.Alternate = alt_fn;
-    LL_GPIO_Init(gpio->port, &init);
-
-    LL_EXTI_SetEXTISource(exti_port, exti_source_line);
-    LL_EXTI_EnableRisingTrig_0_31(exti_line);
-    LL_EXTI_EnableFallingTrig_0_31(exti_line);
-
-    furi_hal_gpio_add_int_callback(gpio, furi_hal_encoder_lptim_isr, encoder);
-
-    const IRQn_Type irqn = (IRQn_Type)(EXTI0_IRQn + __builtin_ctz(gpio->pin));
-    NVIC_SetPriority(irqn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 5, 0));
-    NVIC_EnableIRQ(irqn);
 }
 
 static void furi_hal_encoder_lptim_init(FuriHalEncoderLpTim* encoder) {
@@ -240,20 +236,8 @@ static void furi_hal_encoder_lptim_init(FuriHalEncoderLpTim* encoder) {
     encoder->counter.accumulator = 0;
     encoder->counter.steps = 0;
 
-    furi_hal_encoder_lptim_pin_init(
-        &gpio_encoder_2_a,
-        LL_GPIO_AF_14,
-        LL_EXTI_EXTI_PORTB,
-        LL_EXTI_EXTI_LINE1,
-        LL_EXTI_LINE_1,
-        encoder);
-    furi_hal_encoder_lptim_pin_init(
-        &gpio_encoder_2_b,
-        LL_GPIO_AF_2,
-        LL_EXTI_EXTI_PORTD,
-        LL_EXTI_EXTI_LINE9,
-        LL_EXTI_LINE_9,
-        encoder);
+    furi_hal_encoder_pin_init(&encoder->pin_a, furi_hal_encoder_lptim_isr, encoder);
+    furi_hal_encoder_pin_init(&encoder->pin_b, furi_hal_encoder_lptim_isr, encoder);
 }
 
 void furi_hal_encoder_init(void) {
